@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController\AskController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,3 +23,6 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('/ask', [AskController::class, 'index'])->name('ask.index');
+Route::post('/ask', [AskController::class, 'ask'])->name('ask.post');
