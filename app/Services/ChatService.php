@@ -108,14 +108,15 @@ class ChatService
      */
     private function getChatSystemPrompt(): array
     {
-        $user = auth()->user();
+        //$user = auth()->user();
+        $user = "Thomas";
         $now = now()->locale('fr')->format('l d F Y H:i');
 
         return [
             'role' => 'system',
             'content' => <<<EOT
                 Tu es un assistant de chat. La date et l'heure actuelle est le {$now}.
-                Tu es actuellement utilisé par {$user->name}.
+                Tu es actuellement utilisé par {$user}.
                 EOT,
         ];
     }
