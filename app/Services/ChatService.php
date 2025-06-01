@@ -108,8 +108,7 @@ class ChatService
      */
     private function getChatSystemPrompt(): array
     {
-        //$user = auth()->user();
-        $user = "Thomas";
+        $user = auth()->user();
         $now = now()->locale('fr')->format('l d F Y H:i');
 
         return [

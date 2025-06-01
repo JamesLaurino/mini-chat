@@ -24,5 +24,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/ask', [AskController::class, 'index'])->name('ask.index');
-Route::post('/ask', [AskController::class, 'ask'])->name('ask.post');
+Route::get('/ask', [AskController::class, 'index'])
+    ->middleware("auth")
+    ->name('ask.index');
+Route::post('/ask', [AskController::class, 'ask'])
+    ->middleware("auth")
+    ->name('ask.post');

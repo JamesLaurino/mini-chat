@@ -1,6 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 
+const props = defineProps({
+    spaces: {
+        type:Array
+    }
+})
+
 const isOpen = ref(false);
 
 const openPanel = () => {
@@ -29,7 +35,7 @@ defineExpose({
         <div
             :class="[
         'fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out',
-        isOpen ? 'translate-x-0' : 'translate-x-[-100%]' // CHANGEMENT ICI
+        isOpen ? 'translate-x-0' : 'translate-x-[-100%]'
       ]"
         >
             <div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
@@ -47,11 +53,11 @@ defineExpose({
             <div class="p-4">
                 <ul class="space-y-2">
                     <li
-                        v-for="i in 5"
-                        :key="i"
+                        v-for="(space,index) in spaces"
+                        :key="index"
                         class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
                     >
-                        Conversation {{ i }}
+                        {{ space.titre }}
                     </li>
                     <li class="p-2 rounded-md cursor-pointer bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-medium">
                         Nouvelle conversation

@@ -15,11 +15,10 @@ const props = defineProps({
     selectedModel: {
         type: String
     },
-    conversations: {
+    spaces: {
         type: Array
     }
 });
-
 
 const form = useForm({
     message: '',
@@ -191,5 +190,5 @@ const openSidePanel = () => {
         </div>
     </div>
 
-    <SidePanel ref="sidePanelRef" />
+    <SidePanel :spaces="spaces" ref="sidePanelRef" />
 </template>
