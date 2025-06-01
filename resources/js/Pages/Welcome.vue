@@ -1,6 +1,6 @@
 <script setup>
 import {Head, useForm} from '@inertiajs/vue3';
-import NavBar from "@/Components/share/NavBar.vue";
+
 
 const props = defineProps({
     flash: {
