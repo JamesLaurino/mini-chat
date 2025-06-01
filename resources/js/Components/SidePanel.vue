@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
     spaces: {
@@ -40,10 +41,7 @@ defineExpose({
         >
             <div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Conversations</h2>
-                <button
-                    @click="closePanel"
-                    class="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                <button @click="closePanel" class="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -52,13 +50,10 @@ defineExpose({
 
             <div class="p-4">
                 <ul class="space-y-2">
-                    <li
-                        v-for="(space,index) in spaces"
-                        :key="index"
-                        class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
-                    >
-                        {{ space.titre }}
+                    <li v-for="(space,index) in spaces" :key="index" class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                        <Link :href="route('ask.show',space.id)"> {{space.titre}} </Link>
                     </li>
+
                     <li class="p-2 rounded-md cursor-pointer bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-medium">
                         Nouvelle conversation
                     </li>
@@ -70,5 +65,4 @@ defineExpose({
 
 
 <style scoped>
-/* Pas besoin de styles personnalisés si toutes les classes Tailwind sont préfixées */
 </style>

@@ -3,6 +3,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 import MarkdownRenderer from '@/Components/MarkdownRenderer.vue';
 import { ref } from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
+import ConversationHistorique from "@/Components/ConversationHistorique.vue";
 
 const props = defineProps({
     flash: {
@@ -16,7 +17,12 @@ const props = defineProps({
         type: String
     },
     spaces: {
-        type: Array
+        type: Array,
+        default: () => []
+    },
+    conversations: {
+        type: Array,
+        default: () => []
     }
 });
 
@@ -75,7 +81,6 @@ const openSidePanel = () => {
     <Head title="Bienvenue" />
 
     <div class="flex flex-col min-h-screen bg-base-200 p-4">
-        <!--  Side panel -->
         <button
             @click="openSidePanel"
             class="btn btn-square fixed top-4 left-4 z-40"
@@ -86,30 +91,26 @@ const openSidePanel = () => {
             </svg>
         </button>
 
-        <!--  Markdown -->
-        <div class="flex-grow container mx-auto max-w-xl pb-4">
+        <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
+            <ConversationHistorique :conversations="conversations" />
             <div v-if="errorMessage" role="alert" class="alert alert-error mb-4">
                 {{ errorMessage }}
             </div>
             <div class="prose dark:prose-invert" v-if="responseMessage && !errorMessage">
                 <h3 class="text-lg font-semibold">Réponse :</h3>
-                <MarkdownRenderer :content="responseMessage" />
+                <MarkdownRenderer :content="String(responseMessage || '')" />
             </div>
         </div>
 
         <div class="container mx-auto max-w-xl p-0">
-
-            <!--  Loding reponse alert -->
             <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-info mb-4">
                 <span class="loading loading-spinner"></span>
                 Chargement de la réponse...
             </div>
 
-            <!--  Form -->
             <form @submit.prevent="submit" class="card bg-base-100 shadow-xl overflow-hidden p-2">
                 <div class="flex items-end gap-2 relative px-2 py-1">
 
-                    <!--  Show options "+" -->
                     <button
                         type="button"
                         @click="toggleOptions"
@@ -137,7 +138,6 @@ const openSidePanel = () => {
                         </svg>
                     </button>
 
-                    <!--  Textarea -->
                     <textarea
                         ref="messageTextarea"
                         v-model="form.message"
@@ -147,7 +147,6 @@ const openSidePanel = () => {
                         :disabled="isLoading"
                     ></textarea>
 
-                    <!--  Submit -->
                     <button
                         type="submit"
                         class="btn btn-primary btn-circle btn-sm"
@@ -170,7 +169,6 @@ const openSidePanel = () => {
                 </div>
 
                 <div :class="['px-2 pb-2 transition-all duration-300 ease-in-out', {'max-h-96 opacity-100 pt-2': showOptions, 'max-h-0 opacity-0 overflow-hidden': !showOptions}]">
-                    <!--  Models -->
                     <div class="form-control w-full">
                         <label class="label">
                             <span class="label-text">Choisissez un modèle</span>

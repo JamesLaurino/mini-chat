@@ -30,3 +30,7 @@ Route::get('/ask', [AskController::class, 'index'])
 Route::post('/ask', [AskController::class, 'ask'])
     ->middleware("auth")
     ->name('ask.post');
+
+Route::get('/ask/{id}', [AskController::class, 'show'])
+    ->middleware("auth")
+    ->name('ask.show');
