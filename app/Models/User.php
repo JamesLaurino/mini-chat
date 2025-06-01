@@ -20,6 +20,14 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    public function spaces() {
+        return $this->hasMany(Space::class);
+    }
+
+    public function conversations() {
+        return $this->hasMany(Conversation::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
