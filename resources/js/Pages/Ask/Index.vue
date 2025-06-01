@@ -14,8 +14,13 @@ const props = defineProps({
     },
     selectedModel: {
         type:String
+    },
+    conversations: {
+        type:Array
     }
 });
+
+console.log(props.conversations["test"])
 
 const form = useForm({
     message: '',
@@ -95,45 +100,42 @@ onMounted(() => {
 <template>
     <Head title="Bienvenue" />
 
-    <div class="tw-flex tw-flex-col tw-min-h-screen tw-bg-gray-100 dark:tw-bg-gray-900 tw-p-4">
+    <div class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
         <button
-            @click="openSidePanel"
-            class="tw-fixed tw-top-4 tw-left-4 tw-z-40 tw-p-2 tw-rounded-md tw-bg-gray-200 dark:tw-bg-gray-700 hover:tw-bg-gray-300 dark:hover:tw-bg-gray-600 tw-text-gray-600 dark:tw-text-gray-300 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500"
-        >
-            <svg class="tw-h-6 tw-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            @click="openSidePanel" class="fixed top-4 left-4 z-40 p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
 
-        <div class="tw-flex-grow tw-container tw-mx-auto tw-max-w-xl tw-pb-4">
-            <div v-if="errorMessage" class="tw-bg-red-100 tw-border tw-border-red-400 tw-text-red-700 tw-px-4 tw-py-3 tw-rounded tw-relative tw-mb-4" role="alert">
+        <div class="flex-grow container mx-auto max-w-xl pb-4">
+            <div v-if="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 {{ errorMessage }}
             </div>
-            <div class="tw-prose dark:tw-prose-invert" v-if="responseMessage && !errorMessage">
-                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-gray-100">Réponse :</h3>
+            <div class="prose dark:prose-invert" v-if="responseMessage && !errorMessage">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Réponse :</h3>
                 <MarkdownRenderer :content="responseMessage" />
             </div>
         </div>
-
-        <div class="tw-container tw-mx-auto tw-max-w-xl tw-p-0">
-            <div v-if="isLoading && !responseMessage" class="tw-bg-blue-100 tw-border tw-border-blue-400 tw-text-blue-700 tw-px-4 tw-py-3 tw-rounded tw-relative tw-mb-4" role="alert">
+        <div class="container mx-auto max-w-xl p-0">
+            <div v-if="isLoading && !responseMessage" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
                 Chargement de la réponse...
             </div>
-            <div v-if="!responseMessage && !isLoading && !errorMessage" class="tw-bg-gray-100 tw-border tw-border-gray-400 tw-text-gray-700 tw-px-4 tw-py-3 tw-rounded tw-relative tw-mb-4" role="alert">
+            <div v-if="!responseMessage && !isLoading && !errorMessage" class="bg-gray-100 border border-gray-400 text-gray-700 px-4 py-3 rounded relative mb-4" role="alert">
                 Bienvenue dans le mini chat !
             </div>
 
-            <form @submit.prevent="submit" class="tw-bg-white p-4 dark:tw-bg-gray-800 tw-rounded-lg tw-shadow-lg tw-overflow-hidden tw-relative tw-p-2">
-                <div class="tw-flex tw-items-end tw-gap-2 tw-relative tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-rounded-xl tw-px-2 tw-py-1">
+            <form @submit.prevent="submit" class="bg-white p-4 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden relative p-2">
+                <div class="flex items-end gap-2 relative border border-gray-300 dark:border-gray-600 rounded-xl px-2 py-1">
                     <button
                         type="button"
                         @click="toggleOptions"
-                        class="tw-flex-shrink-0 tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-bg-transparent hover:tw-bg-gray-200 dark:hover:tw-bg-gray-700 tw-text-gray-600 dark:tw-text-gray-300 tw-transition-colors tw-duration-200"
+                        class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors duration-200"
                     >
                         <svg
                             v-if="!showOptions"
                             xmlns="http://www.w3.org/200_svg"
-                            class="tw-h-5 tw-w-5"
+                            class="h-5 w-5"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -144,7 +146,7 @@ onMounted(() => {
                         <svg
                             v-else
                             xmlns="http://www.w3.org/2000/svg"
-                            class="tw-h-5 tw-w-5"
+                            class="h-5 w-5"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -157,7 +159,7 @@ onMounted(() => {
                     <textarea
                         v-model="form.message"
                         id="message"
-                        class="tw-flex-grow tw-resize-none tw-overflow-hidden tw-h-10 tw-min-h-[2.5rem] tw-max-h-48 tw-py-2 tw-pr-2 tw-pl-0 tw-text-gray-900 dark:tw-text-white tw-bg-transparent focus:tw-outline-none focus:tw-border-blue-500 focus:tw-ring-1 focus:tw-ring-blue-500 tw-border tw-border-transparent hover:tw-border-gray-400 dark:hover:tw-border-gray-500 tw-rounded-md"
+                        class="flex-grow resize-none overflow-hidden h-10 min-h-[2.5rem] max-h-48 py-2 pr-2 pl-0 text-gray-900 dark:text-white bg-transparent focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 border border-transparent hover:border-gray-400 dark:hover:border-gray-500 rounded-md"
                         placeholder="Entrez votre message"
                         rows="1"
                         :disabled="isLoading"
@@ -166,12 +168,12 @@ onMounted(() => {
 
                     <button
                         type="submit"
-                        class="tw-flex-shrink-0 tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-500 hover:tw-bg-blue-600 tw-text-white tw-transition-colors tw-duration-200 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
+                        class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="isLoading || !form.message.trim()"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="tw-h-5 tw-w-5 tw-transform tw-rotate-45"
+                            class="h-5 w-5 transform rotate-45"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -182,20 +184,20 @@ onMounted(() => {
                     </button>
                 </div>
 
-                <div class="tw-text-red-500 tw-text-sm tw-px-4 tw-pt-1" v-if="form.errors.message">
+                <div class="text-red-500 text-sm px-4 pt-1" v-if="form.errors.message">
                     {{ form.errors.message }}
                 </div>
 
-                <div :class="['tw-px-2 tw-pb-2 tw-transition-all tw-duration-300 tw-ease-in-out', {'tw-max-h-96 tw-opacity-100 tw-pt-2': showOptions, 'tw-max-h-0 tw-opacity-0 tw-overflow-hidden': !showOptions}]">
-                    <div class="form-group tw-mb-2">
-                        <label for="model" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 dark:tw-text-gray-300 tw-mb-1">Choisissez un modèle</label>
-                        <select id="model" v-model="form.model" class="tw-block tw-w-full tw-py-2 tw-px-3 tw-border tw-border-gray-300 dark:tw-border-gray-600 tw-bg-white dark:tw-bg-gray-700 tw-rounded-md tw-shadow-sm focus:tw-outline-none focus:tw-ring-blue-500 focus:tw-border-blue-500 tw-text-gray-900 dark:tw-text-white tw-sm:text-sm">
+                <div :class="['px-2 pb-2 transition-all duration-300 ease-in-out', {'max-h-96 opacity-100 pt-2': showOptions, 'max-h-0 opacity-0 overflow-hidden': !showOptions}]">
+                    <div class="form-group mb-2">
+                        <label for="model" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Choisissez un modèle</label>
+                        <select id="model" v-model="form.model" class="block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 dark:text-white sm:text-sm">
                             <option v-if="props.models.length === 0" disabled>Chargement des modèles...</option>
                             <option v-for="model in props.models" :key="model.id || model.name" :value="model.id || model.name">
                                 {{model.name}}
                             </option>
                         </select>
-                        <div class="tw-text-red-500 tw-text-sm tw-mt-1" v-if="form.errors.model">
+                        <div class="text-red-500 text-sm mt-1" v-if="form.errors.model">
                             {{ form.errors.model }}
                         </div>
                     </div>
