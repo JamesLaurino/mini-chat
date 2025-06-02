@@ -1,10 +1,9 @@
 <script setup>
 import { Head,useForm } from '@inertiajs/vue3';
-import { ref} from "vue";
+import {ref} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
-import dateFormatService from "@/Helpers/DateFormatService.js";
-import ConversationService from "@/Services/ConversationService.js";
+import { useFormSubmission } from '@/Services/FormSubmitService';
 
 const props = defineProps({
     flash: {
@@ -34,73 +33,14 @@ const form = useForm({
 
 let conversationsRef = ref(props.conversations);
 
-const responseMessage = ref('');
-const isLoading = ref(false);
-const errorMessage = ref(null);
-const showOptions = ref(false);
+const { isLoading, errorMessage, responseMessage, handleFormSubmission } = useFormSubmission(props);
 
+const showOptions = ref(false);
 const sidePanelRef = ref(null);
 const messageTextarea = ref(null);
 
 const submit = () => {
-    isLoading.value = true;
-    errorMessage.value = null;
-    if(props.conversations.length <= 0) {
-        console.log("space call")
-        form.post('/space', {
-            onSuccess: () => {
-                isLoading.value = false;
-            },
-            onError: (errors) => {
-                if (errors && Object.keys(errors).length === 0) {
-                    errorMessage.value = 'Une erreur inattendue est survenue lors de l\'envoi du message.';
-                } else if (errors && errors.message) {
-                    errorMessage.value = errors.message;
-                } else {
-                    errorMessage.value = 'Veuillez vérifier les informations saisies.';
-                }
-                responseMessage.value = '';
-                console.error("Erreur lors de l'envoi du formulaire:", errors);
-            },
-            onFinish: () => {
-                isLoading.value = false;
-            }
-        })
-    }
-    else {
-        console.log("ask call")
-        form.post('/ask', {
-            onSuccess: () => {
-                responseMessage.value = props.flash.message || '';
-                errorMessage.value = null;
-                console.log(responseMessage.value);
-                let conversationObjet = {
-                    "response": responseMessage.value,
-                    "question": form.message,
-                    "created_at":dateFormatService,
-                    "updated_at":dateFormatService,
-                    "space_id":conversationsRef.value[0]['space_id']
-                }
-                ConversationService.addConversation(conversationObjet)
-                conversationsRef.value = [...conversationsRef.value, conversationObjet]
-                form.message = '';
-            },
-            onError: (errors) => {
-                if (errors && Object.keys(errors).length === 0) {
-                    errorMessage.value = 'Une erreur inattendue est survenue lors de l\'envoi du message.';
-                } else if (errors && errors.message) {
-                    errorMessage.value = errors.message;
-                } else {
-                    errorMessage.value = 'Veuillez vérifier les informations saisies.';
-                }
-                responseMessage.value = '';
-                console.error("Erreur lors de l'envoi du formulaire:", errors);
-            },
-            onFinish: () => {
-                isLoading.value = false;
-            }
-        });
-    }
+    handleFormSubmission(form, conversationsRef, props.conversations.length > 0);
 };
 
 const toggleOptions = () => {
@@ -203,6 +143,7 @@ const openSidePanel = () => {
                     <span class="label-text-alt">{{ form.errors.message }}</span>
                 </div>
 
+<!--                Créer un composant séparé-->
                 <div :class="['px-2 pb-2 transition-all duration-300 ease-in-out', {'max-h-96 opacity-100 pt-2': showOptions, 'max-h-0 opacity-0 overflow-hidden': !showOptions}]">
                     <div class="form-control w-full">
                         <label class="label">

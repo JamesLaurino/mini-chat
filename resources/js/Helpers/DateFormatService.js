@@ -11,4 +11,4 @@ function dateFormatService() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-export default dateFormatService();
+export default dateFormatService;
