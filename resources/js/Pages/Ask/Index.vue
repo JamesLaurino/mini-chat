@@ -1,9 +1,10 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/vue3';
-import MarkdownRenderer from '@/Components/MarkdownRenderer.vue';
-import { ref } from "vue";
+import { Head,useForm } from '@inertiajs/vue3';
+import { ref} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
+import dateFormatService from "@/Helpers/DateFormatService.js";
+import ConversationService from "@/Services/ConversationService.js";
 
 const props = defineProps({
     flash: {
@@ -31,6 +32,8 @@ const form = useForm({
     model: props.selectedModel || (props.models.length > 0 ? props.models[0].id || props.models[0].name : 'openai/gpt-4.1-mini')
 });
 
+let conversationsRef = ref(props.conversations);
+
 const responseMessage = ref('');
 const isLoading = ref(false);
 const errorMessage = ref(null);
@@ -42,28 +45,62 @@ const messageTextarea = ref(null);
 const submit = () => {
     isLoading.value = true;
     errorMessage.value = null;
-    // form.post('/ask', {
-    //     onSuccess: () => {
-    //         responseMessage.value = props.flash.message || '';
-    //         errorMessage.value = null;
-    //         console.log(responseMessage.value);
-    //         form.message = '';
-    //     },
-    //     onError: (errors) => {
-    //         if (errors && Object.keys(errors).length === 0) {
-    //             errorMessage.value = 'Une erreur inattendue est survenue lors de l\'envoi du message.';
-    //         } else if (errors && errors.message) {
-    //             errorMessage.value = errors.message;
-    //         } else {
-    //             errorMessage.value = 'Veuillez vérifier les informations saisies.';
-    //         }
-    //         responseMessage.value = '';
-    //         console.error("Erreur lors de l'envoi du formulaire:", errors);
-    //     },
-    //     onFinish: () => {
-    //         isLoading.value = false;
-    //     }
-    // });
+    if(props.conversations.length <= 0) {
+        console.log("space call")
+        form.post('/space', {
+            onSuccess: () => {
+                isLoading.value = false;
+            },
+            onError: (errors) => {
+                if (errors && Object.keys(errors).length === 0) {
+                    errorMessage.value = 'Une erreur inattendue est survenue lors de l\'envoi du message.';
+                } else if (errors && errors.message) {
+                    errorMessage.value = errors.message;
+                } else {
+                    errorMessage.value = 'Veuillez vérifier les informations saisies.';
+                }
+                responseMessage.value = '';
+                console.error("Erreur lors de l'envoi du formulaire:", errors);
+            },
+            onFinish: () => {
+                isLoading.value = false;
+            }
+        })
+    }
+    else {
+        console.log("ask call")
+        form.post('/ask', {
+            onSuccess: () => {
+                responseMessage.value = props.flash.message || '';
+                errorMessage.value = null;
+                console.log(responseMessage.value);
+                let conversationObjet = {
+                    "response": responseMessage.value,
+                    "question": form.message,
+                    "created_at":dateFormatService,
+                    "updated_at":dateFormatService,
+                    "space_id":conversationsRef.value[0]['space_id']
+                }
+                ConversationService.addConversation(conversationObjet)
+                conversationsRef.value = [...conversationsRef.value, conversationObjet]
+                form.message = '';
+            },
+            onError: (errors) => {
+                if (errors && Object.keys(errors).length === 0) {
+                    errorMessage.value = 'Une erreur inattendue est survenue lors de l\'envoi du message.';
+                } else if (errors && errors.message) {
+                    errorMessage.value = errors.message;
+                } else {
+                    errorMessage.value = 'Veuillez vérifier les informations saisies.';
+                }
+                responseMessage.value = '';
+                console.error("Erreur lors de l'envoi du formulaire:", errors);
+            },
+            onFinish: () => {
+                isLoading.value = false;
+            }
+        });
+    }
 };
 
 const toggleOptions = () => {
@@ -92,13 +129,11 @@ const openSidePanel = () => {
         </button>
 
         <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
-            <ConversationHistorique :conversations="conversations" />
+
+            <ConversationHistorique :conversations="conversationsRef" />
+
             <div v-if="errorMessage" role="alert" class="alert alert-error mb-4">
                 {{ errorMessage }}
-            </div>
-            <div class="prose dark:prose-invert" v-if="responseMessage && !errorMessage">
-                <h3 class="text-lg font-semibold">Réponse :</h3>
-                <MarkdownRenderer :content="String(responseMessage || '')" />
             </div>
         </div>
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import MarkdownRenderer from "@/Components/MarkdownRenderer.vue";
 import {nextTick, ref, watch} from "vue";
 

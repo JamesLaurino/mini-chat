@@ -34,3 +34,11 @@ Route::post('/ask', [AskController::class, 'ask'])
 Route::get('/ask/{id}', [AskController::class, 'show'])
     ->middleware("auth")
     ->name('ask.show');
+
+Route::post('/space', [AskController::class,'beginNewSpace'])
+    ->middleware('auth')
+    ->name('space.create');
+
+Route::post('/conversation',[AskController::class,'addConversation'])
+    ->middleware("auth")
+    ->name("conversation.create");
