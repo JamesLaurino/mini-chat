@@ -154,6 +154,8 @@ class ChatService
         $user = auth()->user();
         $now = now()->locale('fr')->format('l d F Y H:i');
 
+        //TODO ajouter les intructions personnalisées ici
+
         return [
             'role' => 'system',
             'content' => <<<EOT

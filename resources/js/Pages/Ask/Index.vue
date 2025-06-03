@@ -1,6 +1,6 @@
 <script setup>
 import { Head,useForm } from '@inertiajs/vue3';
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
 import { useFormSubmission } from '@/Services/FormSubmitService';
@@ -31,7 +31,7 @@ const form = useForm({
     model: props.selectedModel || (props.models.length > 0 ? props.models[0].id || props.models[0].name : 'openai/gpt-4.1-mini')
 });
 
-let conversationsRef = ref(props.conversations);
+let conversationsRef = computed(() => props.conversations);
 
 const { isLoading, errorMessage, responseMessage, handleFormSubmission } = useFormSubmission(props);
 
