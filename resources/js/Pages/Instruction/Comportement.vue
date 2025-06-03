@@ -1,5 +1,10 @@
 <script setup>
 
+const props = defineProps({
+    behaviour: {
+        type: String
+    }
+});
 
 </script>
 
@@ -29,13 +34,18 @@
         <div class="w-full lg:w-3/4 flex flex-col bg-base-100 rounded-lg shadow-md p-4">
             <h2 class="text-xl font-bold mb-4 text-base-content">Instructions</h2>
 
-            <div class="flex-grow mb-4">
-        <textarea
-            class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
-            placeholder="- Tu es un modèle de langage. Tu es un assistant dont l'utilisateur t'a donné le nom de Aria.
-- Veilles à l'orthographe. Soigne ton style. Utilise des synonymes. Ne commence pas tes phrases par 'en tant que modèle de langage'.
-- Si besoin, demande des précisions. N'invente rien si je ne le demande pas explicitement."
-        ></textarea>
+            <div  v-if="behaviour !== null" class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                >{{behaviour}}</textarea>
+            </div>
+            <div  v-else class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                    placeholder="- Tu es un modèle de langage. Tu es un assistant dont l'utilisateur t'a donné le nom de Aria.
+        - Veilles à l'orthographe. Soigne ton style. Utilise des synonymes. Ne commence pas tes phrases par 'en tant que modèle de langage'.
+        - Si besoin, demande des précisions. N'invente rien si je ne le demande pas explicitement."
+                ></textarea>
             </div>
 
             <div class="flex justify-end">

@@ -1,5 +1,10 @@
 <script setup>
 
+const props = defineProps({
+    instruction: {
+        type: String
+    }
+});
 
 </script>
 
@@ -28,15 +33,20 @@
         <div class="w-full lg:w-3/4 flex flex-col bg-base-100 rounded-lg shadow-md p-4">
             <h2 class="text-xl font-bold mb-4 text-base-content">Commandes</h2>
 
-            <div class="flex-grow mb-4">
-        <textarea
-            class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
-            placeholder="/aide donner de l'aide sur les commandes
-/recherche effectuer une recherche avec une query
-/idees donner une liste d'idées sur un sujet
-/reflexion mode réflexion : l'assistant découpera sa réponse en 2 parties. Une partie réflexion pour expliquer à haute voix son processus de pensée. Ensuite une partie Réponse, se nourrissant de ses propres réflexions pour générer une réponse de meilleure qualité.
-/ameliore amélioration du style : améliorer le texte précédent. Raccourcir les phrases, retravailler les tournures de phrases, organiser l'information efficacement avec des titres de différents niveaux, des listes et des tableaux. Le texte doit être agréable à lire."
-        ></textarea>
+            <div v-if="instruction !== null" class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                >{{instruction}}</textarea>
+            </div>
+            <div v-else class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                    placeholder="/aide donner de l'aide sur les commandes
+        /recherche effectuer une recherche avec une query
+        /idees donner une liste d'idées sur un sujet
+        /reflexion mode réflexion : l'assistant découpera sa réponse en 2 parties. Une partie réflexion pour expliquer à haute voix son processus de pensée. Ensuite une partie Réponse, se nourrissant de ses propres réflexions pour générer une réponse de meilleure qualité.
+        /ameliore amélioration du style : améliorer le texte précédent. Raccourcir les phrases, retravailler les tournures de phrases, organiser l'information efficacement avec des titres de différents niveaux, des listes et des tableaux. Le texte doit être agréable à lire."
+                ></textarea>
             </div>
 
             <div class="flex justify-end">

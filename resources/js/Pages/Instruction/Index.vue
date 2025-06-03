@@ -4,6 +4,14 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import About from "@/Pages/Instruction/About.vue";
 import Commande from "@/Pages/Instruction/Commande.vue";
 import Comportement from "@/Pages/Instruction/Comportement.vue";
+
+const props = defineProps({
+    preferences: {
+        type: Array,
+        default: () => []
+    }
+});
+
 </script>
 
 <template>
@@ -17,24 +25,22 @@ import Comportement from "@/Pages/Instruction/Comportement.vue";
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-
                     <div class="tabs tabs-lift p-2">
                         <input type="radio" name="tabs" class="tab" aria-label="About" checked="checked" />
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <About/>
+                            <About :about="props.preferences[0]['about']"/>
                         </div>
 
                         <input type="radio" name="tabs" class="tab" aria-label="Commandes"/>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <Commande/>
+                            <Commande :instruction="props.preferences[0]['instruction']"/>
                         </div>
 
                         <input type="radio" name="tabs" class="tab" aria-label="Comportements" />
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <Comportement/>
+                            <Comportement :behaviour="props.preferences[0]['behaviour']"/>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

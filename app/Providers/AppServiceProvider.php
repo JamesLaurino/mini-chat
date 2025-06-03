@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\InstructionController\InstructionController;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
 use Illuminate\Support\ServiceProvider;
@@ -15,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SpaceService::class);
         $this->app->singleton(ConversationService::class);
+        $this->app->singleton(InstructionController::class);
     }
 
     /**

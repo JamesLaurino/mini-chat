@@ -1,5 +1,10 @@
 <script setup>
 
+const props = defineProps({
+    about: {
+        type: String
+    }
+});
 
 </script>
 
@@ -28,11 +33,15 @@
         <div class="w-full lg:w-3/4 flex flex-col bg-base-100 rounded-lg shadow-md p-4">
             <h2 class="text-xl font-bold mb-4 text-base-content">Informations</h2>
 
-            <div class="flex-grow mb-4">
-        <textarea
-            class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
-            placeholder="Hello moi c'est Thomas. Je suis philosophe de formation. Je suis belge."
-        ></textarea>
+            <div v-if="about !== null" class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                >{{about}}</textarea>
+            </div>
+            <div v-else class="flex-grow mb-4">
+                <textarea
+                    class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                    placeholder="Hello moi c'est Hal Colik. Je suis philosophe de formation. Je suis belge."></textarea>
             </div>
 
             <div class="flex justify-end">
