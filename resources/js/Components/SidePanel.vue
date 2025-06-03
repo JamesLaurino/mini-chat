@@ -55,7 +55,7 @@ defineExpose({
                     </li>
 
                     <li class="p-2 rounded-md cursor-pointer bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-medium">
-                        Nouvelle conversation
+                        <Link :href="route('ask.index')"> Nouvelle conversation</Link>
                     </li>
                 </ul>
             </div>

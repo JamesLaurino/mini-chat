@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatController\AskController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InstructionController\InstructionController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -42,3 +43,7 @@ Route::post('/space', [AskController::class,'beginNewSpace'])
 Route::post('/conversation',[AskController::class,'addConversation'])
     ->middleware("auth")
     ->name("conversation.create");
+
+Route::get("/instructions", [InstructionController::class, "index"])
+    ->middleware('auth')
+    ->name('instruction.index');

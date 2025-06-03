@@ -1,5 +1,5 @@
 <script setup>
-import { Head,useForm } from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 import {computed, ref} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
@@ -61,11 +61,16 @@ const openSidePanel = () => {
         <button
             @click="openSidePanel"
             class="btn btn-square fixed top-4 left-4 z-40"
-            aria-label="Ouvrir le panneau latéral"
-        >
+            aria-label="Ouvrir le panneau latéral">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
+        </button>
+
+        <button class="btn btn-square fixed top-4 right-4 z-40">
+            <Link :href="route('dashboard')">
+                <i class="fa-solid fa-user"></i>
+            </Link>
         </button>
 
         <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
@@ -143,7 +148,7 @@ const openSidePanel = () => {
                     <span class="label-text-alt">{{ form.errors.message }}</span>
                 </div>
 
-<!--                Créer un composant séparé-->
+                <!-- Créer un composant séparé-->
                 <div :class="['px-2 pb-2 transition-all duration-300 ease-in-out', {'max-h-96 opacity-100 pt-2': showOptions, 'max-h-0 opacity-0 overflow-hidden': !showOptions}]">
                     <div class="form-control w-full">
                         <label class="label">
