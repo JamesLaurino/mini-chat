@@ -20,6 +20,11 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    public function preference()
+    {
+        return $this->belongsTo(Preference::class);
+    }
+
     public function spaces() {
         return $this->hasMany(Space::class);
     }

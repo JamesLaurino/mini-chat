@@ -155,6 +155,17 @@ class ChatService
         $now = now()->locale('fr')->format('l d F Y H:i');
 
         //TODO ajouter les intructions personnalisées ici
+        /*
+         * $customInstructions = <<<INSTRUCTIONS
+                Tu es un assistant qui répond toujours de manière concise, structurée et professionnelle.
+                Tu utilises des exemples de code lorsqu’ils sont pertinents. L’utilisateur est un développeur web expérimenté qui travaille surtout avec Laravel et Vue.js.
+                Réponds en français. Utilise des titres et sous-titres si nécessaire.
+
+                Commandes personnalisées :
+                - "/resume" : fais un résumé du dernier échange.
+                - "/code [langage]" : génère un exemple de code dans ce langage.
+            INSTRUCTIONS;
+         * */
 
         return [
             'role' => 'system',
