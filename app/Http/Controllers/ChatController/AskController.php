@@ -77,7 +77,7 @@ class AskController extends Controller
 
         $this->conversationService->addConversationInSpace($request);
 
-        return redirect()->back();
+        return redirect()->back()->with('error', 'Erreur: ajout de la conversation impossible');
     }
 
     public function ask(AskRequest $request)
