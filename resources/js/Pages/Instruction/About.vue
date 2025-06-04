@@ -1,13 +1,35 @@
 <script setup>
 
+import {useForm} from "@inertiajs/vue3";
+import {ref} from "vue";
+
 const props = defineProps({
     about: {
         type: String
     }
 });
 
+const form = useForm({
+    message: props.about,
+});
+
+const isLoading = ref(false);
+
 function postAbout() {
-    console.log("About");
+    console.log("About message : " + form.message)
+    isLoading.value = true;
+    form.post('/preference/about', {
+        onSuccess: () => {
+            isLoading.value = false;
+        },
+        onError: (errors) => {
+            form.errors.model = "Une erreur est survenue : " + errors;
+            isLoading.value = false
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
 }
 
 </script>
@@ -27,7 +49,7 @@ function postAbout() {
                     <li>Votre domaine d'expertise</li>
                 </ul>
                 <p class="text-xs text-base-content mt-4 italic">
-                    Exemple : "Je suis prof de langue, intégrant des jeux de rôles et des technologies interactives dans mes cours,
+                    Exemple : "Je suis philosophe, intégrant des jeux de rôles et des technologies interactives dans mes écris,
                     ce qui permet d'aborder la langue de manière dynamique et engageante,
                     encourageant l'expression et la compréhension orale"
                 </p>
@@ -39,17 +61,31 @@ function postAbout() {
 
             <div v-if="about !== null" class="flex-grow mb-4">
                 <textarea
+                    v-model="form.message"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                 >{{about}}</textarea>
             </div>
             <div v-else class="flex-grow mb-4">
                 <textarea
+                    v-model="form.message"
+                    :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                     placeholder="Hello moi c'est Hal Colik. Je suis philosophe de formation. Je suis belge."></textarea>
             </div>
 
+            <div class="flex justify-center" v-if="form.errors.model" >
+                <span class="label-text-alt text-red-700">{{ form.errors.model }}</span>
+            </div>
+
+            <div v-if="isLoading" role="alert" class="alert alert-info mb-4">
+                <span class="loading loading-spinner"></span>
+                Chargement de la réponse...
+            </div>
+
             <div class="flex justify-end">
-                <button @click="postAbout" class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
+                <button @click="postAbout"
+                        :disabled="isLoading"
+                        class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>
     </div>

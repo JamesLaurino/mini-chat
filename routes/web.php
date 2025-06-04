@@ -3,7 +3,7 @@
 use App\Http\Controllers\ChatController\AskController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\InstructionController\InstructionController;
+use App\Http\Controllers\PreferenceController\PreferenceController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -44,6 +44,10 @@ Route::post('/conversation',[AskController::class,'addConversation'])
     ->middleware("auth")
     ->name("conversation.create");
 
-Route::get("/instructions", [InstructionController::class, "index"])
+Route::get("/preference", [PreferenceController::class, "index"])
     ->middleware('auth')
-    ->name('instruction.index');
+    ->name('preference.index');
+
+Route::post("/preference/about", [PreferenceController::class, "storeAbout"])
+    ->middleware('auth')
+    ->name('preference.store');
