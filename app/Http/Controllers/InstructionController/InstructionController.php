@@ -17,4 +17,8 @@ class InstructionController extends Controller
             'preferences' => $preferences
         ]);
     }
+
+    public function store() {
+
+    }
 }

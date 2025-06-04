@@ -6,6 +6,10 @@ const props = defineProps({
     }
 });
 
+function postCommande() {
+    console.log("post commande")
+}
+
 </script>
 
 <template>
@@ -50,7 +54,7 @@ const props = defineProps({
             </div>
 
             <div class="flex justify-end">
-                <button class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
+                <button @click="postCommande" class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>
     </div>
