@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Preference;
 use Illuminate\Support\Facades\Http;
 
 class ChatService
@@ -154,25 +155,36 @@ class ChatService
         $user = auth()->user();
         $now = now()->locale('fr')->format('l d F Y H:i');
 
-        //TODO ajouter les intructions personnalisées ici
-        /*
-         * $customInstructions = <<<INSTRUCTIONS
-                Tu es un assistant qui répond toujours de manière concise, structurée et professionnelle.
-                Tu utilises des exemples de code lorsqu’ils sont pertinents. L’utilisateur est un développeur web expérimenté qui travaille surtout avec Laravel et Vue.js.
-                Réponds en français. Utilise des titres et sous-titres si nécessaire.
 
-                Commandes personnalisées :
-                - "/resume" : fais un résumé du dernier échange.
-                - "/code [langage]" : génère un exemple de code dans ce langage.
-            INSTRUCTIONS;
-         * */
+        $preferences = Preference::where("user_id",auth()->user()->getAuthIdentifier())
+            ->first();
+
+        $about = '';
+        $instruction = '';
+        $behaviour = '';
+
+        if ($preferences !== null) {
+            if (!empty($preferences->about)) {
+                $about = "\n\nÀ propos de l'utilisateur :\n" . $preferences->about;
+            }
+
+            if (!empty($preferences->instruction)) {
+                $instruction = "\n\nInstructions personnalisées :\n" . $preferences->instruction;
+            }
+
+            if (!empty($preferences->behaviour)) {
+                $behaviour = "\n\nComportement attendu de l'assistant :\n" . $preferences->behaviour;
+            }
+        }
+
+        $content = <<<EOT
+            Tu es un assistant de chat. La date et l'heure actuelle est le {$now}.
+            Tu es actuellement utilisé par {$user}{$about}{$instruction}{$behaviour}.
+          EOT;
 
         return [
             'role' => 'system',
-            'content' => <<<EOT
-                Tu es un assistant de chat. La date et l'heure actuelle est le {$now}.
-                Tu es actuellement utilisé par {$user}.
-                EOT,
+            'content' => $content
         ];
     }
 }
