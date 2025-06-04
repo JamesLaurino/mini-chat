@@ -57,6 +57,7 @@ class AskController extends Controller
 //                messages: $messages,
 //                model: $request->model
 //            );
+
             $response = (new ChatService())->generateLoremIpsum(1,50);
             $space = $this->spaceService->createNewSpace();
             $this->conversationService->createConversationForNewSpace($request,$response,$space);

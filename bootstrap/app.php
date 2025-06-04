@@ -15,9 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            \App\Http\Middleware\CheckDailyQuota::class
         ]);
 
-        //
+        $middleware->alias([
+            'check.quota' => \App\Http\Middleware\CheckDailyQuota::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -29,19 +29,19 @@ Route::get('/ask', [AskController::class, 'index'])
     ->middleware("auth")
     ->name('ask.index');
 Route::post('/ask', [AskController::class, 'ask'])
-    ->middleware("auth")
+    ->middleware("auth","check.quota")
     ->name('ask.post');
 
 Route::get('/ask/{id}', [AskController::class, 'show'])
-    ->middleware("auth")
+    ->middleware("auth", "check.quota")
     ->name('ask.show');
 
 Route::post('/space', [AskController::class,'beginNewSpace'])
-    ->middleware('auth')
+    ->middleware('auth',"check.quota")
     ->name('space.create');
 
 Route::post('/conversation',[AskController::class,'addConversation'])
-    ->middleware("auth")
+    ->middleware("auth","check.quota")
     ->name("conversation.create");
 
 Route::get("/preference", [PreferenceController::class, "index"])
