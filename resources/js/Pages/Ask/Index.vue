@@ -1,9 +1,11 @@
 <script setup>
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
-import { useFormSubmission } from '@/Services/FormSubmitService';
+import {useStream} from "@laravel/stream-vue";
+import dateFormatService from "@/Helpers/DateFormatService.js";
+import ConversationService from "@/Services/ConversationService.js";
 
 const props = defineProps({
     flash: {
@@ -33,14 +35,83 @@ const form = useForm({
 
 let conversationsRef = computed(() => props.conversations);
 
-const { isLoading, errorMessage, responseMessage, handleFormSubmission } = useFormSubmission(props);
+let formMessage = "";
+const isLoading = ref(false);
+const errorMessage = ref(null);
+const responseMessage = ref('');
+
+const { data, isFetching, isStreaming, send } = useStream("/stream", {
+    onFinish:() =>
+    {
+        let conversationObjet = {
+            "response": data.value,
+            "question": formMessage,
+            "created_at": dateFormatService(),
+            "updated_at": dateFormatService(),
+            "space_id": conversationsRef.value[0]?.['space_id']
+        };
+
+        if(props.flash.error) {
+            isLoading.value = false;
+            errorMessage.value = props.flash.error;
+        }
+        responseMessage.value = data || '';
+        errorMessage.value = null;
+
+        ConversationService.addConversation(conversationObjet)
+            .then((result) => {
+                console.log("Conversation ajoutée avec succès :", result);
+            })
+            .catch((error) => {
+                console.error("Erreur lors de l'ajout de la conversation :", error);
+                errorMessage.value = "Erreur lors de la sauvegarde de la conversation.";
+                isLoading.value = false;
+            });
+
+        conversationsRef.value = [...conversationsRef.value, conversationObjet];
+        isLoading.value = false;
+        form.message = '';
+    }
+});
+
+const sendMessage = () => {
+    send({
+        message: `Current timestamp: ${Date.now()}`,
+        model:'ooooo'
+    });
+};
 
 const showOptions = ref(false);
 const sidePanelRef = ref(null);
 const messageTextarea = ref(null);
 
 const submit = () => {
-    handleFormSubmission(form, conversationsRef, props.conversations.length > 0);
+
+    if(!props.conversations.length > 0) {
+        console.log("space call");
+        form.post('/space', {
+            onSuccess: () => {
+                if(props.flash.error) {
+                    isLoading.value = false;
+                    errorMessage.value = props.flash.error;
+                    return;
+                }
+                isLoading.value = false;
+            },
+            onError: (errors) => {
+                errorMessage.value = 'Veuillez vérifier les informations saisies :' + errors;
+                responseMessage.value = '';
+            },
+            onFinish: () => {
+                isLoading.value = false;
+            }
+        });
+    }
+    else {
+        isLoading.value = true;
+        formMessage = form.message;
+        sendMessage();
+    }
 };
 
 const toggleOptions = () => {
@@ -56,7 +127,6 @@ const openSidePanel = () => {
 
 <template>
     <Head title="Bienvenue" />
-
     <div class="flex flex-col min-h-screen bg-base-200 p-4">
         <button
             @click="openSidePanel"
@@ -75,13 +145,12 @@ const openSidePanel = () => {
 
         <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
 
-            <ConversationHistorique :conversations="conversationsRef" />
+            <ConversationHistorique :new-data="data" :conversations="conversationsRef" />
 
             <div v-if="errorMessage" role="alert" class="alert alert-error mb-4">
                 {{ errorMessage }}
             </div>
         </div>
-
         <div class="container mx-auto max-w-xl p-0">
             <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-info mb-4">
                 <span class="loading loading-spinner"></span>

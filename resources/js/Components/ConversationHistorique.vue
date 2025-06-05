@@ -6,6 +6,10 @@ const props = defineProps({
     conversations: {
         type: Array,
         default: () => []
+    },
+    newData: {
+        type: String,
+        default:() => {}
     }
 })
 
@@ -55,6 +59,9 @@ const props = defineProps({
                     <MarkdownRenderer :content="String(conv.response || '')" />
                 </div>
             </div>
+        </div>
+        <div v-if="newData" class="chat-bubble chat-bubble-info">
+            {{newData}}
         </div>
     </div>
 </template>

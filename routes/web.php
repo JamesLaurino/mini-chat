@@ -25,12 +25,18 @@ Route::middleware([
     })->name('dashboard');
 });
 
+/********* STREAM ********/
+Route::post("/stream", [AskController::class,"stream"])
+    ->middleware('auth')
+    ->name("broadcasting.stream");
+
 /*********** ASK ********/
 Route::get('/ask', [AskController::class, 'index'])
     ->middleware("auth")
     ->name('ask.index');
+
 Route::post('/ask', [AskController::class, 'ask'])
-    ->middleware("auth","check.quota")
+    ->middleware("auth")
     ->name('ask.post');
 
 Route::get('/ask/{id}', [AskController::class, 'show'])

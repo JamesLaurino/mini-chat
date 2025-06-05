@@ -9,6 +9,7 @@ use App\Services\ChatService;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
 use App\Services\WebService;
+use Illuminate\Http\Client\Request;
 use Inertia\Inertia;
 
 class AskController extends Controller
@@ -33,6 +34,30 @@ class AskController extends Controller
             'spaces' => $spaces,
             'conversations' => $conversations
         ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function stream(Request $request)
+    {
+        // return new new ChatService())->getStreamMock();
+        $messages = [[
+            'role' => 'user',
+            'content' => $request->message,
+        ]];
+
+        $stream = (new ChatService())->getStream(
+            messages: $messages,
+            model: $request->model
+        );
+
+        return response()->stream(function () use ($stream) {
+            foreach ($stream as $response) {
+                yield $response;
+                //yield $response->choices[0]->delta->content ?? '';
+            }
+        });
     }
 
     public function show($id)

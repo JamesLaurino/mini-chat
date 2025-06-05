@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Preference;
 use Illuminate\Support\Facades\Http;
+use OpenAI\Responses\StreamResponse;
 
 class ChatService
 {
@@ -18,6 +19,49 @@ class ChatService
         $this->apiKey = config('services.openrouter.api_key');
         $this->client = $this->createOpenAIClient();
     }
+
+    public function getStream(array $messages, string $model = null, float $temperature = 0.7): StreamResponse
+    {
+        try {
+            logger()->info('Envoi du message', [
+                'model' => $model,
+                'temperature' => $temperature,
+            ]);
+
+            $models = collect($this->getModels());
+            if (!$model || !$models->contains('id', $model)) {
+                $model = self::DEFAULT_MODEL;
+                logger()->info('Modèle par défaut utilisé:', ['model' => $model]);
+            }
+
+            $messages = [$this->getChatSystemPrompt(), ...$messages];
+            return $this->client->chat()->createStreamed([
+                'model' => $model,
+                'messages' => $messages,
+                'temperature' => $temperature,
+            ]);
+
+        } catch (\Exception $e) {
+            logger()->error('Erreur dans sendMessage:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            throw $e;
+        }
+    }
+
+    public function getStreamMock() {
+        return response()->stream(function () {
+            $stream = ["hello","there","cannot do it", "un","peu","plus"];
+
+            foreach ($stream as $response) {
+                yield $response;
+                usleep(1000000);
+            }
+        });
+    }
+
 
     /**
      * @return array<array-key, array{
@@ -116,7 +160,7 @@ class ChatService
             }
 
             $messages = [$this->getChatSystemPrompt(), ...$messages];
-            $response = $this->client->chat()->create([
+            $response = $this->client->chat()->create([ // created tream
                 'model' => $model,
                 'messages' => $messages,
                 'temperature' => $temperature,
