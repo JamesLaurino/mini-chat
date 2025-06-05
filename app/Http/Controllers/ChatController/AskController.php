@@ -8,12 +8,16 @@ use App\Http\Requests\ConversationRequest;
 use App\Services\ChatService;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
+use App\Services\WebService;
 use Inertia\Inertia;
 
 class AskController extends Controller
 {
 
-    public function __construct(private SpaceService $spaceService, private ConversationService $conversationService){
+    public function __construct(
+        private WebService $webService,
+        private SpaceService $spaceService,
+        private ConversationService $conversationService){
     }
 
     public function index()
@@ -49,17 +53,14 @@ class AskController extends Controller
     public function beginNewSpace(AskRequest $request) {
 
         try {
-//            $messages = [[
-//                'role' => 'user',
-//                'content' => $request->message,
-//            ]];
-//            $response = (new ChatService())->sendMessage(
-//                messages: $messages,
-//                model: $request->model
-//            );
 
+            //$response = $this->webService->getResponse($request);
             $response = (new ChatService())->generateLoremIpsum(1,50);
-            $space = $this->spaceService->createNewSpace();
+
+            //$titre = $this->webService->getResponse($request, "Génère un titre pour ce message (maximum 4 mots) :");
+            $titre = (new ChatService())->generateLoremIpsum(1,2);
+
+            $space = $this->spaceService->createNewSpace($titre);
             $this->conversationService->createConversationForNewSpace($request,$response,$space);
 
             return redirect()->route("ask.show", $space->id)->with('message', $response);
@@ -84,15 +85,7 @@ class AskController extends Controller
     public function ask(AskRequest $request)
     {
         try {
-//            $messages = [[
-//                'role' => 'user',
-//                'content' => $request->message,
-//            ]];
-//
-//            $response = (new ChatService())->sendMessage(
-//                messages: $messages,
-//                model: $request->model
-//            );
+            //$response = $this->webService->getResponse($request);
             $response = (new ChatService())->generateLoremIpsum(1,50);
             return redirect()->back()->with('message', $response);
         } catch (\Exception $e) {

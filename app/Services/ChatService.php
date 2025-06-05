@@ -52,7 +52,7 @@ class ChatService
         });
     }
 
-    function generateLoremIpsum(int $numParagraphs = 1, int $wordsPerParagraph = 100): string
+    public function generateLoremIpsum(int $numParagraphs = 1, int $wordsPerParagraph = 100): string
     {
         $loremIpsumWords = [
             'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do',
@@ -93,7 +93,6 @@ class ChatService
 
         return implode("\n\n", $text); // Joindre les paragraphes avec deux retours à la ligne
     }
-
 
     /**
      * @param array{role: 'user'|'assistant'|'system'|'function', content: string} $messages

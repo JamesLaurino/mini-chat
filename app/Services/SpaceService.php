@@ -6,10 +6,9 @@ use App\Models\Space;
 
 class SpaceService
 {
-    public function createNewSpace() {
-        // TODO make another call for the title
+    public function createNewSpace($titre) {
         return Space::create([
-            'titre' => random_int(0, PHP_INT_MAX),
+            'titre' => $titre,
             'user_id' => auth()->user()->getAuthIdentifier()
         ]);
     }
