@@ -33,7 +33,7 @@ Route::post('/ask', [AskController::class, 'ask'])
     ->name('ask.post');
 
 Route::get('/ask/{id}', [AskController::class, 'show'])
-    ->middleware("auth", "check.quota")
+    ->middleware("auth")
     ->name('ask.show');
 
 Route::post('/space', [AskController::class,'beginNewSpace'])

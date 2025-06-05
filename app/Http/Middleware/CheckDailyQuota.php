@@ -14,21 +14,29 @@ class CheckDailyQuota
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
-        $today = Carbon::today();
 
-        $quota = Metric::firstOrCreate(
-            ['user_id' => $user->id, 'date' => $today],
-            ['request_count' => 0]
-        );
-
-
-        if ($quota->request_count >= 50) {
-
-            return Inertia::render('Error/Index');
+        if($user === null) {
+            return $next($request);
         }
 
-        $quota->increment('request_count');
+        if($user->role->value == "ADMIN")
+        {
+            return $next($request);
+        }
+        else {
+            $today = Carbon::today();
 
-        return $next($request);
+            $quota = Metric::firstOrCreate(
+                ['user_id' => $user->id, 'date' => $today],
+                ['request_count' => 0]
+            );
+
+            if ($quota->request_count >= 50) {
+                return Inertia::render('Error/Index');
+            }
+
+            $quota->increment('request_count');
+            return $next($request);
+        }
     }
 }
