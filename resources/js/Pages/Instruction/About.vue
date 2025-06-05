@@ -16,7 +16,6 @@ const form = useForm({
 const isLoading = ref(false);
 
 function postAbout() {
-    console.log("About message : " + form.message)
     isLoading.value = true;
     form.post('/preference/about', {
         onSuccess: () => {
@@ -62,6 +61,7 @@ function postAbout() {
             <div v-if="about !== null" class="flex-grow mb-4">
                 <textarea
                     v-model="form.message"
+                    :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                 >{{about}}</textarea>
             </div>

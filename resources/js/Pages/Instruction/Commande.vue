@@ -1,13 +1,34 @@
 <script setup>
 
+import {ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
+
 const props = defineProps({
     instruction: {
         type: String
     }
 });
 
+const form = useForm({
+    message: props.instruction
+});
+
+const isLoading = ref(false);
+
 function postCommande() {
-    console.log("post commande")
+    isLoading.value = true;
+    form.post('/preference/instructions', {
+        onSuccess: () => {
+            isLoading.value = false;
+        },
+        onError: (errors) => {
+            form.errors.model = "Une erreur est survenue : " + errors;
+            isLoading.value = false
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
 }
 
 </script>
@@ -39,12 +60,16 @@ function postCommande() {
 
             <div v-if="instruction !== null" class="flex-grow mb-4">
                 <textarea
+                    :disabled="isLoading"
+                    v-model="form.message"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                 >{{instruction}}</textarea>
             </div>
             <div v-else class="flex-grow mb-4">
                 <textarea
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
+                    :disabled="isLoading"
+                    v-model="form.message"
                     placeholder="/aide donner de l'aide sur les commandes
         /recherche effectuer une recherche avec une query
         /idees donner une liste d'idées sur un sujet
@@ -53,8 +78,19 @@ function postCommande() {
                 ></textarea>
             </div>
 
+            <div class="flex justify-center" v-if="form.errors.model" >
+                <span class="label-text-alt text-red-700">{{ form.errors.model }}</span>
+            </div>
+
+            <div v-if="isLoading" role="alert" class="alert alert-info mb-4">
+                <span class="loading loading-spinner"></span>
+                Chargement de la réponse...
+            </div>
+
             <div class="flex justify-end">
-                <button @click="postCommande" class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
+                <button @click="postCommande"
+                        :disabled="isLoading"
+                        class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>
     </div>

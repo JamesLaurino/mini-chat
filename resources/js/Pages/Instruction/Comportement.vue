@@ -1,13 +1,34 @@
 <script setup>
 
+import {ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
+
 const props = defineProps({
     behaviour: {
         type: String
     }
 });
 
-function postComportement() {
-    console.log("post comportement");
+const form = useForm({
+    message: props.behaviour
+});
+
+const isLoading = ref(false);
+
+function postBehaviour() {
+    isLoading.value = true;
+    form.post('/preference/behaviour', {
+        onSuccess: () => {
+            isLoading.value = false;
+        },
+        onError: (errors) => {
+            form.errors.model = "Une erreur est survenue : " + errors;
+            isLoading.value = false
+        },
+        onFinish: () => {
+            isLoading.value = false;
+        }
+    });
 }
 
 </script>
@@ -40,11 +61,15 @@ function postComportement() {
 
             <div  v-if="behaviour !== null" class="flex-grow mb-4">
                 <textarea
+                    v-model="form.message"
+                    :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                 >{{behaviour}}</textarea>
             </div>
             <div  v-else class="flex-grow mb-4">
                 <textarea
+                    v-model="form.message"
+                    :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                     placeholder="- Tu es un modèle de langage. Tu es un assistant dont l'utilisateur t'a donné le nom de Aria.
         - Veilles à l'orthographe. Soigne ton style. Utilise des synonymes. Ne commence pas tes phrases par 'en tant que modèle de langage'.
@@ -52,8 +77,19 @@ function postComportement() {
                 ></textarea>
             </div>
 
+            <div class="flex justify-center" v-if="form.errors.model" >
+                <span class="label-text-alt text-red-700">{{ form.errors.model }}</span>
+            </div>
+
+            <div v-if="isLoading" role="alert" class="alert alert-info mb-4">
+                <span class="loading loading-spinner"></span>
+                Chargement de la réponse...
+            </div>
+
             <div class="flex justify-end">
-                <button @click="postComportement" class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
+                <button @click="postBehaviour"
+                    :disabled="isLoading"
+                    class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>
     </div>

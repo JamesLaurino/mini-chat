@@ -18,15 +18,16 @@ class PreferenceService
             ->get();
     }
 
-    public function updateAbout($preference, $request) {
+    public function updatePreference($preference, $request, $column):void
+    {
         $preference->update([
-            "about" => $request->message
+            $column => $request->message
         ]);
     }
 
-    public function createPreference($request) {
+    public function createPreference($request,$column) {
         return Preference::create([
-            'about' => $request->message
+            $column => $request->message
         ]);
     }
 }
