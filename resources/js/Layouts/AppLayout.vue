@@ -57,6 +57,11 @@ const logout = () => {
                                     Instructions
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('ask.index')" :active="route().current('ask.index')">
+                                    Chat
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -198,6 +203,12 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('preference.index')" :active="route().current('preference.index')">
+                            Instructions
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('ask.index')">
+                            Chat
                         </ResponsiveNavLink>
                     </div>
 
