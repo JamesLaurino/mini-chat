@@ -22,36 +22,31 @@ const props = defineProps({
     }
 })
 
-// Référence au conteneur de conversation pour un scroll plus précis
+
 const chatContainerRef = ref(null);
 
-// Fonction pour scroller vers le bas
 const scrollToBottom = () => {
     nextTick(() => {
         if (chatContainerRef.value) {
-            console.log("Scrolling to bottom..."); // Pour le débogage
+            console.log("Scrolling to bottom...");
             chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight;
         }
     });
 };
 
-// Scroll automatique lors de l'arrivée de nouvelles données ou de nouvelles conversations
 watch(() => [props.newData, props.conversations, props.isStreamingResponse], () => {
     scrollToBottom();
 }, { deep: true });
 
-// Scroller vers le bas également à l'initialisation du composant (utile si des conversations existent déjà)
 import { onMounted } from 'vue';
 onMounted(() => {
     scrollToBottom();
 });
 
-
-
 </script>
 
 <template>
-    <div ref="chatContainerRef" class="flex-grow overflow-y-auto px-4 py-2 mb-4 space-y-4">
+    <div ref="chatContainerRef" class="h-[calc(100vh-200px)] overflow-y-auto px-4 py-2 mb-4 space-y-4 custom-scrollbar-hidden">
         <div v-if="props.conversations.length === 0 && !props.isStreamingResponse" class="text-center text-gray-500">
             Commencez une nouvelle conversation !
         </div>
@@ -103,3 +98,18 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+
+.custom-scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+
+.custom-scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+</style>
