@@ -40,9 +40,11 @@ const isLoading = ref(false);
 const errorMessage = ref(null);
 const responseMessage = ref('');
 
+
 const { data, isFetching, isStreaming, send } = useStream("/stream", {
     onFinish:() =>
     {
+        console.log(data.value)
         let conversationObjet = {
             "response": data.value,
             "question": formMessage,
@@ -57,7 +59,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
         }
         responseMessage.value = data || '';
         errorMessage.value = null;
-
+        console.log(conversationObjet)
         ConversationService.addConversation(conversationObjet)
             .then((result) => {
                 console.log("Conversation ajoutée avec succès :", result);
@@ -76,8 +78,8 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
 
 const sendMessage = () => {
     send({
-        message: `Current timestamp: ${Date.now()}`,
-        model:'ooooo'
+        message: form.model,
+        model:form.message
     });
 };
 

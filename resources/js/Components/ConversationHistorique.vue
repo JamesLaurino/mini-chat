@@ -13,24 +13,6 @@ const props = defineProps({
     }
 })
 
-//const chatHistoryContainer = ref(null);
-// const scrollToBottom = () => {
-//     if (chatHistoryContainer.value) {
-//         chatHistoryContainer.value.scrollTop = chatHistoryContainer.value.scrollHeight;
-//     }
-// };
-//
-// watch(() => props.conversations, () => {
-//     nextTick(() => {
-//         scrollToBottom();
-//     });
-// }, { deep: true });
-//
-//
-// nextTick(() => {
-//     scrollToBottom();
-// });
-
 </script>
 
 <template>
