@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ChatController;
 
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AskRequest;
 use App\Http\Requests\ConversationRequest;
@@ -9,7 +10,7 @@ use App\Services\ChatService;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
 use App\Services\WebService;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AskController extends Controller
@@ -19,6 +20,10 @@ class AskController extends Controller
         private WebService $webService,
         private SpaceService $spaceService,
         private ConversationService $conversationService){
+    }
+
+    public function test() {
+        return "Hello there !!!";
     }
 
     public function index()
@@ -41,23 +46,34 @@ class AskController extends Controller
      */
     public function stream(Request $request)
     {
-        // return new new ChatService())->getStreamMock();
-        $messages = [[
-            'role' => 'user',
-            'content' => $request->message,
-        ]];
+        // MOCK implementation
+        return response()->stream(function () use ($request) {
 
-        $stream = (new ChatService())->getStream(
-            messages: $messages,
-            model: $request->model
-        );
+            $stream = ["hello","there","cannot do it", "un","peu","plus"];
 
-        return response()->stream(function () use ($stream) {
             foreach ($stream as $response) {
                 yield $response;
-                //yield $response->choices[0]->delta->content ?? '';
+                usleep(1000000);
             }
         });
+
+        // API IMPLEMENTATION
+//        $conversation = $this->conversationService->getConversationForOpenIA($request);
+//        return response()->stream(function () use ($conversation, $request) {
+//            $fullResponse = '';
+//
+//            $stream = (new ChatService())->getstream(
+//                messages: $conversation,
+//                model: $request->model
+//            );
+//
+//            foreach ($stream as $response) {
+//                $content = $response->choices[0]->delta->content ?? '';
+//                $fullResponse .= $content;
+//                yield $content;
+//                usleep(100000);
+//            }
+//        });
     }
 
     public function show($id)
@@ -76,9 +92,7 @@ class AskController extends Controller
     }
 
     public function beginNewSpace(AskRequest $request) {
-
         try {
-
             //$response = $this->webService->getResponse($request);
             $response = (new ChatService())->generateLoremIpsum(1,50);
 

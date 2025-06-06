@@ -30,6 +30,31 @@ class ConversationService
             ->get();
     }
 
+    public function getConversationForOpenIA($request) {
+        $conversations = Conversation::where("user_id",auth()->user()->getAuthIdentifier())
+            ->where('space_id', $request->conversationId)
+            ->orderBy("created_at","asc")
+            ->get();
+
+        $conversationDto = array();
+
+        foreach($conversations as $conv) {
+            array_push($conversationDto, [
+                "role" => "user",
+                "content" => $conv->question
+            ], [
+                "role" => "assistant",
+                "content" => $conv->response
+            ]);
+        }
+
+        array_push($conversationDto, [
+            "role" => "user",
+            "content" => $request->message
+        ]);
+        return $conversationDto;
+    }
+
     public function getConversationByUserIdAndSpaceId($request) {
         return Conversation::where("user_id",auth()->user()->getAuthIdentifier())
             ->where('space_id', $request->space_id)

@@ -39,6 +39,7 @@ class ChatService
                 'model' => $model,
                 'messages' => $messages,
                 'temperature' => $temperature,
+                'stream' => true
             ]);
 
         } catch (\Exception $e) {

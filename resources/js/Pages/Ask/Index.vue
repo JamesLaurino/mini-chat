@@ -30,17 +30,17 @@ const props = defineProps({
 
 const form = useForm({
     message: '',
-    model: props.selectedModel || (props.models.length > 0 ? props.models[0].id || props.models[0].name : 'openai/gpt-4.1-mini')
+    model: props.selectedModel || (props.models.length > 0 ? props.models[0].id || props.models[0].name : 'openai/gpt-4.1-mini'),
+    conversationId: props.spaces[0]["id"]
 });
 
 let conversationsRef = computed(() => props.conversations);
 
-// Nouvelle variable pour stocker la question actuelle
+
 const currentQuestion = ref('');
 const isLoading = ref(false);
 const errorMessage = ref(null);
 const responseMessage = ref('');
-// Nouvelle variable pour suivre l'état du streaming
 const isStreamingResponse = ref(false);
 
 
@@ -60,7 +60,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
             isLoading.value = false;
             errorMessage.value = props.flash.error;
         }
-        responseMessage.value = ''; // Efface la réponse streamée une fois la conversation ajoutée
+        responseMessage.value = '';
         errorMessage.value = null;
         console.log(conversationObjet)
         ConversationService.addConversation(conversationObjet)
@@ -76,14 +76,18 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
         conversationsRef.value = [...conversationsRef.value, conversationObjet];
         isLoading.value = false;
         form.message = '';
-        isStreamingResponse.value = false; // Le streaming est terminé
+        isStreamingResponse.value = false;
     }
 });
 
 const sendMessage = () => {
+
+    console.log("Model : " + form.model);
+
     send({
-        message: form.model,
-        model:form.message
+        message: form.message,
+        model:form.model,
+        conversationId: form.conversationId
     });
 };
 
@@ -115,8 +119,8 @@ const submit = () => {
     }
     else {
         isLoading.value = true;
-        currentQuestion.value = form.message; // Stocke la question avant l'envoi
-        isStreamingResponse.value = true; // Commence le streaming
+        currentQuestion.value = form.message;
+        isStreamingResponse.value = true;
         sendMessage();
     }
 };

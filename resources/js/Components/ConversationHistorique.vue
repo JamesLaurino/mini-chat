@@ -1,6 +1,7 @@
 <script setup>
 import MarkdownRenderer from "@/Components/MarkdownRenderer.vue";
 import {nextTick, ref, watch} from "vue";
+import { onMounted } from 'vue';
 
 const props = defineProps({
     conversations: {
@@ -28,7 +29,6 @@ const chatContainerRef = ref(null);
 const scrollToBottom = () => {
     nextTick(() => {
         if (chatContainerRef.value) {
-            console.log("Scrolling to bottom...");
             chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight;
         }
     });
@@ -38,7 +38,6 @@ watch(() => [props.newData, props.conversations, props.isStreamingResponse], () 
     scrollToBottom();
 }, { deep: true });
 
-import { onMounted } from 'vue';
 onMounted(() => {
     scrollToBottom();
 });
@@ -52,7 +51,7 @@ onMounted(() => {
         </div>
 
         <div v-for="(conv, index) in props.conversations" :key="index" class="space-y-2">
-            <template v-if="!props.isStreamingResponse || index < props.conversations.length -1">
+            <template v-if="!props.isStreamingResponse || index < props.conversations.length">
                 <div class="chat chat-end">
                     <div class="chat-header">
                         Vous
