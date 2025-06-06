@@ -25,6 +25,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
+/* TEST */
+Route::get("/test", [AskController::class,"test"]);
+
 /********* STREAM ********/
 Route::post("/stream", [AskController::class,"stream"])
     ->middleware('auth')
