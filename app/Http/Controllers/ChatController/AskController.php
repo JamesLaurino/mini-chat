@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ChatController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AskRequest;
 use App\Http\Requests\ConversationRequest;
+use App\Models\Conversation;
 use App\Services\ChatService;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
@@ -23,7 +24,24 @@ class AskController extends Controller
     }
 
     public function test() {
-        return "Hello there !!!";
+        $conversations = Conversation::where("user_id", auth()->user()->getAuthIdentifier())
+            ->where('space_id', 2)
+            ->orderBy("created_at", "asc")
+            ->get();
+
+        foreach ($conversations as $conv) {
+            $messages[] = [
+                'role' => 'user',
+                'content' => $conv->question
+            ];
+
+            $messages[] = [
+                'role' => 'assistant',
+                'content' => $conv->response
+            ];
+        }
+
+        return ['messages' => $messages];
     }
 
     public function index()
@@ -56,6 +74,7 @@ class AskController extends Controller
                 usleep(1000000);
             }
         });
+
 
         // API IMPLEMENTATION
 //        $conversation = $this->conversationService->getConversationForOpenIA($request);

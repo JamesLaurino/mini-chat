@@ -36,23 +36,21 @@ class ConversationService
             ->orderBy("created_at","asc")
             ->get();
 
-        $conversationDto = array();
+        $messages = [];
 
-        foreach($conversations as $conv) {
-            array_push($conversationDto, [
-                "role" => "user",
-                "content" => $conv->question
-            ], [
-                "role" => "assistant",
-                "content" => $conv->response
-            ]);
+        foreach ($conversations as $conv) {
+            $messages[] = [
+                'role' => 'user',
+                'content' => $conv->question
+            ];
+
+            $messages[] = [
+                'role' => 'assistant',
+                'content' => $conv->response
+            ];
         }
 
-        array_push($conversationDto, [
-            "role" => "user",
-            "content" => $request->message
-        ]);
-        return $conversationDto;
+        return ['messages' => $messages];
     }
 
     public function getConversationByUserIdAndSpaceId($request) {
