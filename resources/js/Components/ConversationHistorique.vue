@@ -9,41 +9,97 @@ const props = defineProps({
     },
     newData: {
         type: String,
-        default:() => {}
+        default:() => ''
+    },
+
+    currentQuestion: {
+        type: String,
+        default: () => ''
+    },
+    isStreamingResponse: {
+        type: Boolean,
+        default: false
     }
 })
+
+// Référence au conteneur de conversation pour un scroll plus précis
+const chatContainerRef = ref(null);
+
+// Fonction pour scroller vers le bas
+const scrollToBottom = () => {
+    nextTick(() => {
+        if (chatContainerRef.value) {
+            console.log("Scrolling to bottom..."); // Pour le débogage
+            chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight;
+        }
+    });
+};
+
+// Scroll automatique lors de l'arrivée de nouvelles données ou de nouvelles conversations
+watch(() => [props.newData, props.conversations, props.isStreamingResponse], () => {
+    scrollToBottom();
+}, { deep: true });
+
+// Scroller vers le bas également à l'initialisation du composant (utile si des conversations existent déjà)
+import { onMounted } from 'vue';
+onMounted(() => {
+    scrollToBottom();
+});
+
+
 
 </script>
 
 <template>
-    <div class="flex-grow overflow-y-auto px-4 py-2 mb-4 space-y-4">
-        <div v-if="props.conversations.length === 0" class="text-center text-gray-500">
+    <div ref="chatContainerRef" class="flex-grow overflow-y-auto px-4 py-2 mb-4 space-y-4">
+        <div v-if="props.conversations.length === 0 && !props.isStreamingResponse" class="text-center text-gray-500">
             Commencez une nouvelle conversation !
         </div>
 
         <div v-for="(conv, index) in props.conversations" :key="index" class="space-y-2">
+            <template v-if="!props.isStreamingResponse || index < props.conversations.length -1">
+                <div class="chat chat-end">
+                    <div class="chat-header">
+                        Vous
+                        <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
+                    </div>
+                    <div class="chat-bubble chat-bubble-primary">
+                        <MarkdownRenderer :content="String(conv.question || '')" />
+                    </div>
+                </div>
+
+                <div class="chat chat-start">
+                    <div class="chat-header">
+                        Assistant
+                        <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
+                    </div>
+                    <div class="chat-bubble chat-bubble-info">
+                        <MarkdownRenderer :content="String(conv.response || '')" />
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div v-if="isStreamingResponse">
             <div class="chat chat-end">
                 <div class="chat-header">
                     Vous
-                    <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
+                    <time class="text-xs opacity-50 ml-2">{{ new Date().toLocaleTimeString() }}</time>
                 </div>
                 <div class="chat-bubble chat-bubble-primary">
-                    <MarkdownRenderer :content="String(conv.question || '')" />
+                    <MarkdownRenderer :content="String(props.currentQuestion || '')" />
                 </div>
             </div>
 
             <div class="chat chat-start">
                 <div class="chat-header">
                     Assistant
-                    <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
+                    <time class="text-xs opacity-50 ml-2">{{ new Date().toLocaleTimeString() }}</time>
                 </div>
                 <div class="chat-bubble chat-bubble-info">
-                    <MarkdownRenderer :content="String(conv.response || '')" />
+                    <MarkdownRenderer :content="String(props.newData || '')" />
                 </div>
             </div>
-        </div>
-        <div v-if="newData" class="chat-bubble chat-bubble-info">
-            {{newData}}
         </div>
     </div>
 </template>

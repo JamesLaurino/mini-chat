@@ -35,10 +35,13 @@ const form = useForm({
 
 let conversationsRef = computed(() => props.conversations);
 
-let formMessage = "";
+// Nouvelle variable pour stocker la question actuelle
+const currentQuestion = ref('');
 const isLoading = ref(false);
 const errorMessage = ref(null);
 const responseMessage = ref('');
+// Nouvelle variable pour suivre l'état du streaming
+const isStreamingResponse = ref(false);
 
 
 const { data, isFetching, isStreaming, send } = useStream("/stream", {
@@ -47,7 +50,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
         console.log(data.value)
         let conversationObjet = {
             "response": data.value,
-            "question": formMessage,
+            "question": currentQuestion.value, // Utilise currentQuestion
             "created_at": dateFormatService(),
             "updated_at": dateFormatService(),
             "space_id": conversationsRef.value[0]?.['space_id']
@@ -57,7 +60,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
             isLoading.value = false;
             errorMessage.value = props.flash.error;
         }
-        responseMessage.value = data || '';
+        responseMessage.value = ''; // Efface la réponse streamée une fois la conversation ajoutée
         errorMessage.value = null;
         console.log(conversationObjet)
         ConversationService.addConversation(conversationObjet)
@@ -73,6 +76,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
         conversationsRef.value = [...conversationsRef.value, conversationObjet];
         isLoading.value = false;
         form.message = '';
+        isStreamingResponse.value = false; // Le streaming est terminé
     }
 });
 
@@ -111,7 +115,8 @@ const submit = () => {
     }
     else {
         isLoading.value = true;
-        formMessage = form.message;
+        currentQuestion.value = form.message; // Stocke la question avant l'envoi
+        isStreamingResponse.value = true; // Commence le streaming
         sendMessage();
     }
 };
@@ -147,7 +152,12 @@ const openSidePanel = () => {
 
         <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
 
-            <ConversationHistorique :new-data="data" :conversations="conversationsRef" />
+            <ConversationHistorique
+                :new-data="data"
+                :conversations="conversationsRef"
+                :current-question="currentQuestion"
+                :is-streaming-response="isStreamingResponse"
+            />
 
             <div v-if="errorMessage" role="alert" class="alert alert-error mb-4">
                 {{ errorMessage }}
@@ -219,7 +229,6 @@ const openSidePanel = () => {
                     <span class="label-text-alt">{{ form.errors.message }}</span>
                 </div>
 
-                <!-- Créer un composant séparé-->
                 <div :class="['px-2 pb-2 transition-all duration-300 ease-in-out', {'max-h-96 opacity-100 pt-2': showOptions, 'max-h-0 opacity-0 overflow-hidden': !showOptions}]">
                     <div class="form-control w-full">
                         <label class="label">
