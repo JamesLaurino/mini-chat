@@ -21,3 +21,21 @@ it('allows authenticated user to see the dashboard', function () {
             ->assertSee('Dashboard');
     });
 });
+
+it('allows authenticated user to see the side panel component', function () {
+    $this->browse(function (Browser $browser) {
+        $user = User::find(2);
+        if (!$user) {
+            $user = User::factory()->create(['id' => 2]);
+        }
+
+        $browser->loginAs($user)
+            ->visit('/ask')
+            ->screenshot('before-button-wait') // Add this!
+            ->waitFor('button[aria-label="Ouvrir le panneau latéral"]') // Try this selector first!
+            ->click('button[aria-label="Ouvrir le panneau latéral"]')
+            ->waitFor('#side-panel-component')
+            ->assertVisible('#side-panel-component')
+            ->assertSeeIn('#side-panel-component', 'Conversations');
+    });
+});

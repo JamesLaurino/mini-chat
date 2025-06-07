@@ -87,7 +87,9 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
 
 const sendMessage = () => {
 
+    console.log("SendMessage call")
     console.log("Model : " + form.model);
+    console.log("Message : " + form.message);
 
     send({
         message: form.message,

@@ -26,7 +26,7 @@ defineExpose({
 
 
 <template>
-    <div class="relative z-50">
+    <div class="relative z-50" id="side-panel-component">
         <div
             v-if="isOpen"
             @click="closePanel"
