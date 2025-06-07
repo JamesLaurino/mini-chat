@@ -106,22 +106,23 @@ class AskController extends Controller
             'models' => $models,
             'selectedModel' => $selectedModel,
             'spaces' => $spaces,
-            'conversations' => $conversations
+            'conversations' => $conversations,
+            'space' => $id
         ]);
     }
 
     public function beginNewSpace(AskRequest $request) {
         try {
-            //$response = $this->webService->getResponse($request);
-            $response = (new ChatService())->generateLoremIpsum(1,50);
+
 
             //$titre = $this->webService->getResponse($request, "Génère un titre pour ce message (maximum 4 mots) :");
             $titre = (new ChatService())->generateLoremIpsum(1,2);
 
             $space = $this->spaceService->createNewSpace($titre);
-            $this->conversationService->createConversationForNewSpace($request,$response,$space);
 
-            return redirect()->route("ask.show", $space->id)->with('message', $response);
+            $this->conversationService->createFirstConversationForNewSpace($request,$space);
+
+            return redirect()->route("ask.show", $space->id)->with('message', 'redirection done successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur: ' . $e->getMessage());
         }

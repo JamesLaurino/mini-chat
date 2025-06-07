@@ -15,6 +15,15 @@ class ConversationService
         ]);
     }
 
+    public function createFirstConversationForNewSpace($request,$space) {
+        return Conversation::create([
+            'question' => $request->message,
+            'response' => "",
+            'user_id' => auth()->user()->getAuthIdentifier(),
+            'space_id' => $space->id
+        ]);
+    }
+
     public function addConversationInSpace($request) {
         return Conversation::create([
             'question' => $request->question,
@@ -26,6 +35,7 @@ class ConversationService
 
     public function getConversationBySpaceId($spaceId) {
         return Conversation::where("space_id",$spaceId)
+            ->where("response", "!=", "")
             ->orderBy("created_at","asc")
             ->get();
     }

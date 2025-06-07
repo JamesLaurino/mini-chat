@@ -25,6 +25,9 @@ const props = defineProps({
     conversations: {
         type: Array,
         default: () => []
+    },
+    space: {
+        type: Number
     }
 });
 
@@ -35,6 +38,7 @@ const form = useForm({
 });
 
 let conversationsRef = computed(() => props.conversations);
+let spaceRef = computed(() => props.space)
 
 
 const currentQuestion = ref('');
@@ -47,13 +51,13 @@ const isStreamingResponse = ref(false);
 const { data, isFetching, isStreaming, send } = useStream("/stream", {
     onFinish:() =>
     {
-        console.log(data.value)
+        console.log("Onfinish : " + data.value)
         let conversationObjet = {
             "response": data.value,
-            "question": currentQuestion.value, // Utilise currentQuestion
+            "question": currentQuestion.value,
             "created_at": dateFormatService(),
             "updated_at": dateFormatService(),
-            "space_id": conversationsRef.value[0]?.['space_id']
+            "space_id": spaceRef.value ? spaceRef.value : conversationsRef.value[0]?.['space_id']
         };
 
         if(props.flash.error) {
@@ -63,6 +67,7 @@ const { data, isFetching, isStreaming, send } = useStream("/stream", {
         responseMessage.value = '';
         errorMessage.value = null;
         console.log(conversationObjet)
+        console.log("Props spaceRef : " + spaceRef.value)
         ConversationService.addConversation(conversationObjet)
             .then((result) => {
                 console.log("Conversation ajoutée avec succès :", result);
@@ -95,35 +100,37 @@ const showOptions = ref(false);
 const sidePanelRef = ref(null);
 const messageTextarea = ref(null);
 
-const submit = () => {
+const submit = async () => {
+    isLoading.value = true;
+    currentQuestion.value = form.message;
 
-    if(!props.conversations.length > 0) {
-        console.log("space call");
+    if (!props.conversations.length > 0) {
+        console.log('space call')
         form.post('/space', {
             onSuccess: () => {
-                if(props.flash.error) {
+                console.log("success")
+                console.log(props.conversations)
+                if (props.flash.error) {
                     isLoading.value = false;
                     errorMessage.value = props.flash.error;
                     return;
                 }
-                isLoading.value = false;
+
+                isStreamingResponse.value = true;
+                sendMessage();
             },
             onError: (errors) => {
                 errorMessage.value = 'Veuillez vérifier les informations saisies :' + errors;
                 responseMessage.value = '';
-            },
-            onFinish: () => {
                 isLoading.value = false;
             }
         });
-    }
-    else {
-        isLoading.value = true;
-        currentQuestion.value = form.message;
+    } else {
         isStreamingResponse.value = true;
         sendMessage();
     }
 };
+
 
 const toggleOptions = () => {
     showOptions.value = !showOptions.value;
