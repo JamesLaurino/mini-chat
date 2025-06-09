@@ -61,6 +61,7 @@ function postBehaviour() {
 
             <div  v-if="behaviour !== null" class="flex-grow mb-4">
                 <textarea
+                    id="comportement-textarea"
                     v-model="form.message"
                     :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
@@ -68,6 +69,7 @@ function postBehaviour() {
             </div>
             <div  v-else class="flex-grow mb-4">
                 <textarea
+                    id="comportement-textarea"
                     v-model="form.message"
                     :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
@@ -89,6 +91,7 @@ function postBehaviour() {
             <div class="flex justify-end">
                 <button @click="postBehaviour"
                     :disabled="isLoading"
+                        dusk="submit-comportement"
                     class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>

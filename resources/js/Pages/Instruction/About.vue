@@ -60,6 +60,7 @@ function postAbout() {
 
             <div v-if="about !== null" class="flex-grow mb-4">
                 <textarea
+                    id="about-textarea"
                     v-model="form.message"
                     :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
@@ -67,6 +68,7 @@ function postAbout() {
             </div>
             <div v-else class="flex-grow mb-4">
                 <textarea
+                    id="about-textarea"
                     v-model="form.message"
                     :disabled="isLoading"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
@@ -84,6 +86,7 @@ function postAbout() {
 
             <div class="flex justify-end">
                 <button @click="postAbout"
+                        dusk="submit-about"
                         :disabled="isLoading"
                         class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>

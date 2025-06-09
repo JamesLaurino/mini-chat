@@ -61,6 +61,7 @@ function postCommande() {
             <div v-if="instruction !== null" class="flex-grow mb-4">
                 <textarea
                     :disabled="isLoading"
+                    id="commande-textarea"
                     v-model="form.message"
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                 >{{instruction}}</textarea>
@@ -69,6 +70,7 @@ function postCommande() {
                 <textarea
                     class="textarea textarea-bordered w-full h-full min-h-[200px] md:min-h-[300px] lg:min-h-[400px] resize-y"
                     :disabled="isLoading"
+                    id="commande-textarea"
                     v-model="form.message"
                     placeholder="/aide donner de l'aide sur les commandes
         /recherche effectuer une recherche avec une query
@@ -90,6 +92,7 @@ function postCommande() {
             <div class="flex justify-end">
                 <button @click="postCommande"
                         :disabled="isLoading"
+                        dusk="submit-commande"
                         class="bg-black text-white font-bold py-2 px-4 rounded">Envoyer</button>
             </div>
         </div>
