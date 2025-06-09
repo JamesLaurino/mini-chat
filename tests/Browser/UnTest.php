@@ -73,7 +73,7 @@ it('test user can send message', function () {
     });
 });
 
-//
+
 it('test user cannot send message', function () {
     $this->browse(function (Browser $browser) {
         $user = User::find(2);
@@ -141,6 +141,20 @@ it('test sSTREAMING RESPONSE APPEAR', function () {
             ->assertSee('Test streaming'); // Le message envoyé
     });
 });
+
+it('test during streaming input is disable', function () {
+    $this->browse(function (Browser $browser) {
+        $user = User::find(2);
+        $browser->loginAs($user)
+            ->visit('/ask')
+            ->waitFor('#message')
+            ->type('#message', 'Test streaming')
+            ->click('button[type="submit"]')
+            ->waitFor('.loading.loading-spinner')
+            ->assertAttributeContains('button[type="submit"]', 'disabled', 'true');
+    });
+});
+
 
 /****************************** INTERFACE ********************************/
 /************************************************************************/
