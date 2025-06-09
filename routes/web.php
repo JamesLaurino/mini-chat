@@ -25,8 +25,6 @@ Route::middleware([
     })->name('dashboard');
 });
 
-/* TEST */
-Route::get("/test", [AskController::class,"test"]);
 
 /********* STREAM ********/
 Route::post("/stream", [AskController::class,"stream"])
@@ -37,10 +35,6 @@ Route::post("/stream", [AskController::class,"stream"])
 Route::get('/ask', [AskController::class, 'index'])
     ->middleware("auth")
     ->name('ask.index');
-
-Route::post('/ask', [AskController::class, 'ask'])
-    ->middleware("auth")
-    ->name('ask.post');
 
 Route::get('/ask/{id}', [AskController::class, 'show'])
     ->middleware("auth")

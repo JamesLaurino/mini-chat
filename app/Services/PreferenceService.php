@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Conversation;
 use App\Models\Preference;
 
 class PreferenceService

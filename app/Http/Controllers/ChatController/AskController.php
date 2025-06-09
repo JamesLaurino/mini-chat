@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ChatController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AskRequest;
 use App\Http\Requests\ConversationRequest;
+use App\Http\Requests\StreamRequest;
 use App\Models\Conversation;
 use App\Services\ChatService;
 use App\Services\ConversationService;
@@ -21,27 +22,6 @@ class AskController extends Controller
         private WebService $webService,
         private SpaceService $spaceService,
         private ConversationService $conversationService){
-    }
-
-    public function test() {
-        $conversations = Conversation::where("user_id", auth()->user()->getAuthIdentifier())
-            ->where('space_id', 2)
-            ->orderBy("created_at", "asc")
-            ->get();
-
-        foreach ($conversations as $conv) {
-            $messages[] = [
-                'role' => 'user',
-                'content' => $conv->question
-            ];
-
-            $messages[] = [
-                'role' => 'assistant',
-                'content' => $conv->response
-            ];
-        }
-
-        return ['messages' => $messages];
     }
 
     public function index()
@@ -62,12 +42,12 @@ class AskController extends Controller
     /**
      * @throws \Exception
      */
-    public function stream(Request $request)
+    public function stream(StreamRequest $request)
     {
         // MOCK implementation
         return response()->stream(function () use ($request) {
 
-            $stream = ["hello","there","cannot do it", "un","peu","plus"];
+            $stream = ["hello ","how ","can ", "i ","help ","you ","today " ,"James ", "?"];
 
             foreach ($stream as $response) {
                 yield $response;
@@ -75,9 +55,8 @@ class AskController extends Controller
             }
         });
 
-
         // API IMPLEMENTATION
-//        $conversation = $this->conversationService->getConversationForOpenIA($request);
+//        $conversation = $this->conversationService->getConversationForOpenIA($request)['messages'];
 //        return response()->stream(function () use ($conversation, $request) {
 //            $fullResponse = '';
 //
@@ -87,6 +66,7 @@ class AskController extends Controller
 //            );
 //
 //            foreach ($stream as $response) {
+//
 //                $content = $response->choices[0]->delta->content ?? '';
 //                $fullResponse .= $content;
 //                yield $content;
@@ -114,7 +94,6 @@ class AskController extends Controller
     public function beginNewSpace(AskRequest $request) {
         try {
 
-
             //$titre = $this->webService->getResponse($request, "Génère un titre pour ce message (maximum 4 mots) :");
             $titre = (new ChatService())->generateLoremIpsum(1,2);
 
@@ -133,7 +112,7 @@ class AskController extends Controller
         $conversations = $this->conversationService->getConversationByUserIdAndSpaceId($request);
 
         if($conversations->isEmpty()) {
-            return redirect()->back()->with('error', 'Erreur: ' . "Une erreur est survenue");
+            return redirect()->back()->with('error', 'Erreur: Une erreur technique est survenue');
         }
 
         $this->conversationService->addConversationInSpace($request);
@@ -141,14 +120,4 @@ class AskController extends Controller
         return redirect()->back()->with('error', 'Erreur: ajout de la conversation impossible');
     }
 
-    public function ask(AskRequest $request)
-    {
-        try {
-            //$response = $this->webService->getResponse($request);
-            $response = (new ChatService())->generateLoremIpsum(1,50);
-            return redirect()->back()->with('message', $response);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erreur: ' . $e->getMessage());
-        }
-    }
 }

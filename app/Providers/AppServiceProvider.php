@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\ConversationService;
+use App\Services\MetricService;
 use App\Services\PreferenceService;
 use App\Services\SpaceService;
 use App\Services\WebService;
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ConversationService::class);
         $this->app->singleton(PreferenceService::class);
         $this->app->singleton(WebService::class);
+        $this->app->singleton(MetricService::class);
     }
 
     /**

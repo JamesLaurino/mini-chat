@@ -60,6 +60,15 @@ class ConversationService
             ];
         }
 
+        // Ajout du message actuel
+        if ($request->message) {
+            $messages[] = [
+                'role' => 'user',
+                'content' => $request->message
+            ];
+        }
+
+
         return ['messages' => $messages];
     }
 

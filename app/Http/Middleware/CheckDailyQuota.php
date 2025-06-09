@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Metric;
+use App\Services\MetricService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -10,6 +11,8 @@ use Inertia\Inertia;
 
 class CheckDailyQuota
 {
+    public function __construct(private MetricService $metricService){}
+
 
     public function handle(Request $request, Closure $next)
     {
@@ -24,12 +27,8 @@ class CheckDailyQuota
             return $next($request);
         }
         else {
-            $today = Carbon::today();
 
-            $quota = Metric::firstOrCreate(
-                ['user_id' => $user->id, 'date' => $today],
-                ['request_count' => 0]
-            );
+            $quota = $this->metricService->getQuota($user);
 
             if ($quota->request_count >= 50) {
                 return Inertia::render('Error/Index');
