@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import {computed, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
 import {useStream} from "@laravel/stream-vue";
@@ -46,6 +46,7 @@ const isLoading = ref(false);
 const errorMessage = ref(null);
 const responseMessage = ref('');
 const isStreamingResponse = ref(false);
+const scrollContainer = ref(null)
 
 
 const { data, isFetching, isStreaming, send } = useStream("/stream", {
@@ -90,6 +91,7 @@ const sendMessage = () => {
     console.log("SendMessage call")
     console.log("Model : " + form.model);
     console.log("Message : " + form.message);
+    console.log("ConversationId : " + form.conversationId);
 
     send({
         message: form.message,
@@ -133,7 +135,33 @@ const submit = async () => {
     }
 };
 
+const autoResize = () => {
+    const el = messageTextarea.value
+    if (!el) return
 
+    el.style.height = 'auto'
+    const maxHeight = 192 // 48 * 4 = 12rem = Tailwind's max-h-48
+    const scrollHeight = el.scrollHeight
+
+    if (scrollHeight > maxHeight) {
+        el.style.height = maxHeight + 'px'
+        el.style.overflowY = 'auto'
+    } else {
+        el.style.height = scrollHeight + 'px'
+        el.style.overflowY = 'hidden'
+    }
+
+    // Scroll le conteneur principal (comme dans ChatGPT)
+    nextTick(() => {
+        if (scrollContainer.value) {
+            scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight
+        }
+    })
+}
+
+watch(() => form.message, () => {
+    nextTick(() => autoResize())
+})
 const toggleOptions = () => {
     showOptions.value = !showOptions.value;
 };
@@ -163,7 +191,7 @@ const openSidePanel = () => {
             </Link>
         </button>
 
-        <div class="flex-grow container mx-auto max-w-xl flex flex-col pt-16">
+        <div ref="scrollContainer" class="flex-grow container mx-auto max-w-xl flex flex-col pt-16 overflow-y-auto">
 
             <ConversationHistorique
                 :new-data="data"
@@ -219,6 +247,7 @@ const openSidePanel = () => {
                         class="textarea textarea-info flex-grow resize-none overflow-hidden h-10 min-h-[2.5rem] max-h-48 py-2 pr-2 pl-0"
                         rows="1"
                         :disabled="isLoading"
+                        @input="autoResize"
                     ></textarea>
 
                     <button
