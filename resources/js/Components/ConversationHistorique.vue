@@ -57,7 +57,7 @@ onMounted(() => {
                         Vous
                         <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
                     </div>
-                    <div class="chat-bubble chat-bubble-primary">
+                    <div class="chat-bubble chat-bubble-accent">
                         <MarkdownRenderer :content="String(conv.question || '')" />
                     </div>
                 </div>
@@ -67,7 +67,7 @@ onMounted(() => {
                         Assistant
                         <time class="text-xs opacity-50 ml-2" v-if="conv.created_at">{{ new Date(conv.created_at).toLocaleTimeString() }}</time>
                     </div>
-                    <div class="chat-bubble chat-bubble-info">
+                    <div class="chat-bubble">
                         <MarkdownRenderer :content="String(conv.response || '')" />
                     </div>
                 </div>
@@ -80,7 +80,7 @@ onMounted(() => {
                     Vous
                     <time class="text-xs opacity-50 ml-2">{{ new Date().toLocaleTimeString() }}</time>
                 </div>
-                <div class="chat-bubble chat-bubble-primary">
+                <div class="chat-bubble chat-bubble-accent">
                     <MarkdownRenderer :content="String(props.currentQuestion || '')" />
                 </div>
             </div>
@@ -90,7 +90,7 @@ onMounted(() => {
                     Assistant
                     <time class="text-xs opacity-50 ml-2">{{ new Date().toLocaleTimeString() }}</time>
                 </div>
-                <div class="chat-bubble chat-bubble-info">
+                <div class="chat-bubble chat-bubble">
                     <MarkdownRenderer :content="String(props.newData || '')" />
                 </div>
             </div>
