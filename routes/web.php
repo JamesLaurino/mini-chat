@@ -18,27 +18,22 @@ Route::middleware([
 
 Route::middleware('auth')->group(function () {
 
-    /********* STREAM ********/
     Route::post('/stream', [AskController::class, 'stream'])->name('broadcasting.stream');
 
-    /*********** ASK ********/
     Route::controller(AskController::class)->group(function () {
         Route::get('/', 'index')->name('racine.index');
         Route::get('/ask', 'index')->name('ask.index');
         Route::get('/ask/{id}', 'show')->name('ask.show');
     });
 
-    /********** SPACE *********/
     Route::post('/space', [AskController::class, 'beginNewSpace'])
         ->middleware('check.quota')
         ->name('space.create');
 
-    /********** CONVERSATION *********/
     Route::post('/conversation', [AskController::class, 'addConversation'])
         ->middleware('check.quota')
         ->name('conversation.create');
 
-    /********** PREFERENCES *********/
     Route::prefix('preference')->controller(PreferenceController::class)->group(function () {
         Route::get('/', 'index')->name('preference.index');
         Route::post('/about', 'storeAbout')->name('preference.about.store');
