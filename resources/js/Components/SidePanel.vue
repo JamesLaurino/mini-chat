@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -8,7 +8,15 @@ const props = defineProps({
     }
 })
 
+const searchQuery = ref('');
+
 const isOpen = ref(false);
+
+const filteredSpaces = computed(() => {
+    return props.spaces.filter(space =>
+        space.titre.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+});
 
 const openPanel = () => {
     isOpen.value = true;
@@ -48,9 +56,19 @@ defineExpose({
                 </button>
             </div>
 
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="search"
+                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+
+
             <div class="p-4">
                 <ul class="space-y-2">
-                    <li v-for="(space,index) in spaces" :key="index" class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                    <li v-for="(space,index) in filteredSpaces" :key="index" class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                         <Link :href="route('ask.show',space.id)"> {{space.titre}} </Link>
                     </li>
 
@@ -62,7 +80,3 @@ defineExpose({
         </div>
     </div>
 </template>
-
-
-<style scoped>
-</style>
