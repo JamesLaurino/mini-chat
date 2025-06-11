@@ -7,12 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AskRequest;
 use App\Http\Requests\ConversationRequest;
 use App\Http\Requests\StreamRequest;
-use App\Models\Conversation;
 use App\Services\ChatService;
 use App\Services\ConversationService;
 use App\Services\SpaceService;
 use App\Services\WebService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AskController extends Controller
@@ -58,7 +56,6 @@ class AskController extends Controller
         // API IMPLEMENTATION
 //        $conversation = $this->conversationService->getConversationForOpenIA($request)['messages'];
 //        return response()->stream(function () use ($conversation, $request) {
-//            $fullResponse = '';
 //
 //            $stream = (new ChatService())->getstream(
 //                messages: $conversation,
@@ -68,7 +65,6 @@ class AskController extends Controller
 //            foreach ($stream as $response) {
 //
 //                $content = $response->choices[0]->delta->content ?? '';
-//                $fullResponse .= $content;
 //                yield $content;
 //                usleep(100000);
 //            }
@@ -94,7 +90,7 @@ class AskController extends Controller
     public function beginNewSpace(AskRequest $request) {
         try {
 
-            //$titre = $this->webService->getResponse($request, "Génère un titre pour ce message (maximum 4 mots) :");
+            //$titre = $this->webService->getResponse($request, "Génère un titre de maximum 4 mots pour ce message :");
             $titre = (new ChatService())->generateLoremIpsum(1,2);
 
             $space = $this->spaceService->createNewSpace($titre);

@@ -205,7 +205,7 @@ const openSidePanel = () => {
             </div>
         </div>
         <div class="container mx-auto max-w-xl p-0">
-            <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-info mb-4">
+            <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-success alert-soft mb-4">
                 <span class="loading loading-spinner"></span>
                 Chargement de la réponse...
             </div>
@@ -244,7 +244,7 @@ const openSidePanel = () => {
                         ref="messageTextarea"
                         v-model="form.message"
                         id="message"
-                        class="textarea textarea-info flex-grow resize-none overflow-hidden h-10 min-h-[2.5rem] max-h-48 py-2 pr-2 pl-0"
+                        class="textarea textarea-neutral flex-grow resize-none overflow-hidden h-10 min-h-[2.5rem] max-h-48 py-2 pr-2 pl-0"
                         rows="1"
                         :disabled="isLoading"
                         @input="autoResize"
@@ -252,7 +252,7 @@ const openSidePanel = () => {
 
                     <button
                         type="submit"
-                        class="btn btn-primary btn-circle btn-sm"
+                        class="btn btn-accent btn-circle btn-sm"
                         :disabled="isLoading || !form.message.trim()"
                         aria-label="Envoyer le message">
                         <svg
