@@ -129,7 +129,7 @@ it('test switch between spaces', function () {
 /****************************** STREAMING ********************************/
 /*************************************************************************/
 
-it('test sSTREAMING RESPONSE APPEAR', function () {
+it('test STREAMING RESPONSE APPEAR', function () {
     $this->browse(function (Browser $browser) {
         $user = User::find(2);
         $browser->loginAs($user)
