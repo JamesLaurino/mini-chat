@@ -52,17 +52,6 @@ class ChatService
         }
     }
 
-    public function getStreamMock() {
-        return response()->stream(function () {
-            $stream = ["hello","there","cannot do it", "un","peu","plus"];
-
-            foreach ($stream as $response) {
-                yield $response;
-                usleep(1000000);
-            }
-        });
-    }
-
 
     /**
      * @return array<array-key, array{
