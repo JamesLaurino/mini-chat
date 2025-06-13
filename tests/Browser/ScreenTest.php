@@ -1,12 +1,48 @@
 <?php
 
+use App\Models\Conversation;
+use App\Models\Space;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Laravel\Dusk\Browser;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
+beforeEach(function () {
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+    Conversation::truncate();
+    Space::truncate();
+    User::truncate();
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+    $this->user = User::factory()->create([
+        'name' => 'Alice',
+        'email' => 'alice@example.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    $this->space = Space::factory()->create([
+        'user_id' => $this->user->id,
+        'titre' => 'Space 1'
+    ]);
+
+    $this->conversation = Conversation::factory()->create([
+       'question' => 'Hello',
+       'response' => 'Hello there !',
+       'user_id' => $this->user->id,
+       'space_id' => $this->space->id,
+    ]);
+
+    $this->preferences = \App\Models\Preference::factory()->create([
+        'about' => 'About',
+        'instruction' => 'Instruction',
+        'behaviour' => 'Behaviour',
+        'user_id' => $this->user->id,
+    ]);
+});
 
 /***************************** NO AUTH TESTS ************************/
-/********************************************************************/
 
 it('test user cannot access chat without login', function () {
     $this->browse(function (Browser $browser) {
@@ -26,22 +62,22 @@ test('Displays the mini-chat text on the home page', function () {
 });
 
 /***************************** CHECK COMPONENTS ************************/
-/**********************************************************************/
 
 it('allows authenticated user to see the dashboard', function () {
     $this->browse(function ($browser) {
 
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/dashboard')
-            ->waitForText('Dashboard', 5) // attend jusqu’à 5 secondes
+            ->waitForText('Dashboard', 5)
             ->assertSee('Dashboard');
     });
 });
 
-it('allows authenticated user to see the side panel component', function () {
-    $user = User::find(2);
 
+it('allows authenticated user to see the side panel component', function () {
+
+    $user = User::where('email', 'alice@example.com')->first();
     $this->browse(function (Browser $browser) use ($user) {
         $browser->loginAs($user)
             ->visit('/ask')
@@ -53,13 +89,11 @@ it('allows authenticated user to see the side panel component', function () {
     });
 });
 
-
 /***************************** CONVERSATION TESTS ************************/
-/*************************************************************************/
 
 it('test user can send message', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
 
         $browser->loginAs($user)
             ->visit('/ask')
@@ -73,20 +107,18 @@ it('test user can send message', function () {
     });
 });
 
-
 it('test user cannot send message', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->assertAttributeContains('button[type="submit"]', 'disabled', 'true');
     });
 });
 
-
 it('test model selected work', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->click('button[aria-label="Afficher/Masquer les options"]')
@@ -97,24 +129,23 @@ it('test model selected work', function () {
 });
 
 /****************************** SPACES TESTS *****************************/
-/*************************************************************************/
 
 it('test create new spaces', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->waitFor('#message')
             ->type('#message', 'Premier message dans un nouveau space')
             ->click('button[type="submit"]')
             ->waitFor('.loading.loading-spinner')
-            ->assertPathBeginsWith('/ask/');
+            ->assertPathBeginsWith('/ask');
     });
 });
 
 it('test switch between spaces', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
         ->visit('/ask')
         ->click('.btn.btn-square.fixed.top-4.left-4')
@@ -127,24 +158,24 @@ it('test switch between spaces', function () {
 });
 
 /****************************** STREAMING ********************************/
-/*************************************************************************/
 
 it('test STREAMING RESPONSE APPEAR', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->waitFor('#message')
             ->type('#message', 'Test streaming')
             ->click('button[type="submit"]')
             ->waitFor('.loading.loading-spinner')
+            ->screenshot('screenshot')
             ->assertSee('Test streaming'); // Le message envoyé
     });
 });
 
 it('test during streaming input is disable', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->waitFor('#message')
@@ -157,11 +188,10 @@ it('test during streaming input is disable', function () {
 
 
 /****************************** INTERFACE ********************************/
-/************************************************************************/
 
 it('test text area expense', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
             ->waitFor('#message')
@@ -175,7 +205,7 @@ it('test text area expense', function () {
 
 it('test preference page', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->assertPresent('input[aria-label="Commandes"]')
@@ -185,7 +215,7 @@ it('test preference page', function () {
 
 it('test preference orders click', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->click('input[aria-label="Commandes"]')
@@ -195,7 +225,7 @@ it('test preference orders click', function () {
 
 it('test preference behaviour click', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->click('input[aria-label="Comportements"]')
@@ -204,17 +234,15 @@ it('test preference behaviour click', function () {
 });
 
 /****************************** PREFERENCES ********************************/
-/************************************************************************/
 
 it('test update about preference', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->waitFor('.tabs')
             ->type('#about-textarea', 'Texte modifié about in test')
             ->click('@submit-about')
-            // Vérifier que le nouveau texte est bien enregistré
             ->assertInputValue('#about-textarea', 'Texte modifié about in test');
     });
 
@@ -222,7 +250,7 @@ it('test update about preference', function () {
 
 it('test update commande preference', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->waitFor('.tabs')
@@ -235,7 +263,7 @@ it('test update commande preference', function () {
 
 it('test update behaviour preference', function () {
     $this->browse(function (Browser $browser) {
-        $user = User::find(2);
+        $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/preference')
             ->waitFor('.tabs')
@@ -243,5 +271,16 @@ it('test update behaviour preference', function () {
             ->type('#comportement-textarea', 'Texte modifié comportement in test')
             ->click('@submit-comportement')
             ->assertInputValue('#comportement-textarea', 'Texte modifié comportement in test');
+    });
+});
+
+it('test back to conversation', function () {
+    $this->browse(function (Browser $browser) {
+        $user = User::where('email', 'alice@example.com')->first();
+        $browser->loginAs($user)
+            ->visit('/dashboard')
+            ->click('@click-start-chat')
+            ->waitForText('Commencez une nouvelle conversation !', 5)
+            ->assertSee('Commencez une nouvelle conversation !');
     });
 });

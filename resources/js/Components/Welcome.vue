@@ -51,7 +51,7 @@ import {Link} from "@inertiajs/vue3";
                 </div>
 
                 <div class="mt-10 text-center">
-                    <Link :href="route('ask.index')" class="btn btn-primary">
+                    <Link dusk="click-start-chat" :href="route('ask.index')" class="btn btn-primary">
                         Commencer à discuter
                     </Link>
                 </div>

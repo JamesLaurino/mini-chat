@@ -22,6 +22,14 @@ abstract class DuskTestCase extends BaseTestCase
         }
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Migration fraîche à chaque test
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+    }
+
     /**
      * Create the RemoteWebDriver instance.
      */
