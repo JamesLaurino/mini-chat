@@ -81,4 +81,13 @@ alt="Mini-Chat Logo" width="50px" height="70px"/>
   <p>Exécutez vos migrations de base de données et remplissez la base de données avec les données initiales :</p>
   <pre><code>php artisan migrate --seed</code></pre>
 
+<h2>6. Lancer les tests unitaires</h2>
+  <p>Exécutez les tests unitaires</p>
+  <pre><code>./vendor/bin/pest tests/Unit/</code></pre>
+
+<h2>7. Lancer les Tests dusk</h2>
+  <p>Exécutez les tests unitaires</p>
+  <pre><code>php artisan dusk</code></pre>
+
+
   <p>Et voilà ! Votre projet Mini-Chat devrait maintenant être configuré et prêt à l'emploi.</p>
