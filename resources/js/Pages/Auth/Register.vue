@@ -20,7 +20,9 @@ const submit = () => {
     form.post(route('register'), {
         onFinish: () => {
             form.reset('password', 'password_confirmation');
-            window.location.reload();
+            if(Object.keys(form.errors).length === 0) {
+                window.location.reload();
+            }
         },
     });
 };

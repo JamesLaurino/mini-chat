@@ -26,7 +26,9 @@ const submit = () => {
     })).post(route('login'), {
         onFinish: () => {
             form.reset('password')
-            window.location.reload();
+            if(Object.keys(form.errors).length === 0) {
+                window.location.reload();
+            }
         },
 
     });
