@@ -28,24 +28,57 @@ alt="Mini-Chat Logo" width="50px" height="70px"/>
 
 ## 🚀 Lancement en local
 
-### 1. Cloner le projet
+<h2>1. Cloner le Projet</h2>
+  <p>Commencez par cloner le dépôt sur votre machine locale :</p>
+  <pre><code>git clone https://github.com/ton-utilisateur/mini-chat.git</code></pre>
 
-a)  git clone https://github.com/ton-utilisateur/mini-chat.git
+<h2>2. Configuration de la Base de Données (Docker)</h2>
+  <p>Nous utiliserons Docker pour configurer vos bases de données MySQL pour les environnements de test et de production. <strong>N'oubliez pas de remplacer <code>&lt;MON_PASSWORD&gt;</code> et <code>&lt;MA_DATABASE&gt;</code> par le mot de passe fort et le nom de base de données souhaités.</strong></p>
 
-b) docker run -d -p 3306:3306 --name mysql-test \
-  -e MYSQL_ROOT_PASSWORD=<MON_PASSWORD> \
-  -e MYSQL_DATABASE=<MA_DATABASE> \
-  mysql:latest
+<h3>a) MySQL pour les Tests</h3>
+  <pre><code>docker run -d -p 3306:3306 --name mysql-test \
+  -e MYSQL_ROOT_PASSWORD=&lt;MON_PASSWORD&gt; \
+  -e MYSQL_DATABASE=&lt;MA_DATABASE&gt; \
+  mysql:latest</code></pre>
 
-c) docker run -d -p 3307:3306 --name mysql-prod \
-  -e MYSQL_ROOT_PASSWORD=<MON_PASSWORD> \
-  -e MYSQL_DATABASE=<MA_DATABASE>\
-  mysql:latest
+<h3>b) MySQL pour la Production</h3>
+  <pre><code>docker run -d -p 3307:3306 --name mysql-prod \
+  -e MYSQL_ROOT_PASSWORD=&lt;MON_PASSWORD&gt; \
+  -e MYSQL_DATABASE=&lt;MA_DATABASE&gt; \
+  mysql:latest</code></pre>
 
-d) cp .env.example .env : 3306 mysql port et OPENROUTER_API_KEY=myKey
-e) cp .env .env.dusk.local : 3307 mysql port et OPENROUTER_API_KEY=myKey
+<h2>3. Configuration de l'Environnement</h2>
 
-f) php -S localhost:8000 -t public
-g) npm run dev
+<h3>a) Fichier d'Environnement Principal</h3>
+  <p>Créez votre fichier d'environnement principal et configurez-le :</p>
+  <pre><code>cp .env.example .env</code></pre>
+  <p><strong>Modifiez le fichier <code>.env</code> :</strong></p>
+  <ul>
+    <li>Configurez votre connexion MySQL (port <code>3306</code> pour la base de données de test).</li>
+    <li>Définissez votre <code>OPENROUTER_API_KEY</code> sur <code>myKey</code> (ou votre clé réelle).</li>
+  </ul>
 
-h) php artisan migrate --seed
+<h3>b) Fichier d'Environnement Dusk</h3>
+  <p>Créez un fichier d'environnement séparé pour les tests Dusk :</p>
+  <pre><code>cp .env.example .env.dusk.local</code></pre>
+  <p><strong>Modifiez le fichier <code>.env.dusk.local</code> :</strong></p>
+  <ul>
+    <li>Configurez votre connexion MySQL (port <code>3307</code> pour la base de données de test).</li>
+    <li>Définissez votre <code>OPENROUTER_API_KEY</code> sur <code>myKey</code> (ou votre clé réelle).</li>
+  </ul>
+
+<h2>4. Lancer l'Application</h2>
+
+<h3>a) Serveur PHP Intégré</h3>
+  <p>Démarrez le serveur de développement PHP :</p>
+  <pre><code>php -S localhost:8000 -t public</code></pre>
+
+<h3>b) Actifs Frontend</h3>
+  <p>Compilez et servez vos actifs frontend :</p>
+  <pre><code>npm run dev</code></pre>
+
+<h2>5. Migrations et Remplissage de la Base de Données</h2>
+  <p>Exécutez vos migrations de base de données et remplissez la base de données avec les données initiales :</p>
+  <pre><code>php artisan migrate --seed</code></pre>
+
+  <p>Et voilà ! Votre projet Mini-Chat devrait maintenant être configuré et prêt à l'emploi.</p>
