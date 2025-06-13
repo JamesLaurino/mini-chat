@@ -205,7 +205,7 @@ const openSidePanel = () => {
             </div>
         </div>
         <div class="container mx-auto max-w-xl p-0">
-            <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-success alert-soft mb-4">
+            <div v-if="isLoading && !responseMessage" role="alert" class="alert alert-success alert-outline mb-4">
                 <span class="loading loading-spinner"></span>
                 Chargement de la réponse...
             </div>
