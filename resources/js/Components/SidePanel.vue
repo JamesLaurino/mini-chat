@@ -1,6 +1,6 @@
 <script setup>
 import {computed, ref} from 'vue';
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 
 const props = defineProps({
     spaces: {
@@ -30,6 +30,13 @@ defineExpose({
     openPanel,
     closePanel
 });
+
+function deleteSpace(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet espace ?')) {
+        router.delete(route('space.destroy', id));
+    }
+}
+
 </script>
 
 
@@ -68,8 +75,11 @@ defineExpose({
 
             <div class="p-4">
                 <ul class="space-y-2">
-                    <li v-for="(space,index) in filteredSpaces" :key="index" class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
-                        <Link :href="route('ask.show',space.id)"> {{space.titre}} </Link>
+                    <li v-for="(space,index) in filteredSpaces" :key="index" class="p-2 rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 flex justify-between items-center">
+                        <Link :href="route('ask.show',space.id)">{{space.titre}}</Link>
+                        <span v-if="spaces.length > 1" @click="deleteSpace(space.id)" class="p-1 rounded-full hover:bg-red-500 transition-colors duration-200">
+                            <img :src="'/storage/upload/trash.png'" width="20px" height="20px" alt=""/>
+                        </span>
                     </li>
 
                     <li class="p-2 rounded-md cursor-pointer bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 font-medium">

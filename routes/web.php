@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController\AskController;
+use App\Http\Controllers\SpaceController\SpaceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PreferenceController\PreferenceController;
 use Inertia\Inertia;
@@ -29,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/space', [AskController::class, 'beginNewSpace'])
         ->middleware('check.quota')
         ->name('space.create');
+
+    Route::delete('/space/delete/{id}', [SpaceController::class, 'destroy'])
+        ->name('space.destroy');
+
 
     Route::post('/conversation', [AskController::class, 'addConversation'])
         ->middleware('check.quota')

@@ -18,4 +18,11 @@ class SpaceService
             ->orderBy('created_at', 'desc')
             ->get();
     }
+
+    public function deleteSpaceById($spaceId) {
+        $post = Space::find($spaceId);
+        if ($post) {
+            $post->delete();
+        }
+    }
 }
