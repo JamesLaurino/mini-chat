@@ -19,25 +19,20 @@ Route::middleware([
 
 Route::middleware('auth')->group(function () {
 
-    Route::post('/stream', [AskController::class, 'stream'])->name('broadcasting.stream');
-
     Route::controller(AskController::class)->group(function () {
         Route::get('/', 'index')->name('racine.index');
         Route::get('/ask', 'index')->name('ask.index');
         Route::get('/ask/{id}', 'show')->name('ask.show');
-    });
+        Route::post('/stream', 'stream')->name('broadcasting.stream');
 
-    Route::post('/space', [AskController::class, 'beginNewSpace'])
-        ->middleware('check.quota')
-        ->name('space.create');
+        Route::middleware('check.quota')->group(function () {
+            Route::post('/space', 'beginNewSpace')->name('space.create');
+            Route::post('/conversation', 'addConversation')->name('conversation.create');
+        });
+    });
 
     Route::delete('/space/delete/{id}', [SpaceController::class, 'destroy'])
         ->name('space.destroy');
-
-
-    Route::post('/conversation', [AskController::class, 'addConversation'])
-        ->middleware('check.quota')
-        ->name('conversation.create');
 
     Route::prefix('preference')->controller(PreferenceController::class)->group(function () {
         Route::get('/', 'index')->name('preference.index');

@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Metric;
 use App\Services\MetricService;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class CheckDailyQuota
