@@ -22,7 +22,8 @@ function postBehaviour() {
             isLoading.value = false;
         },
         onError: (errors) => {
-            form.errors.model = "Une erreur est survenue : " + errors;
+            form.errors.model = "Une erreur est survenue : "
+                + errors + ". Veuillez réessayer plus tard";
             isLoading.value = false
         },
         onFinish: () => {

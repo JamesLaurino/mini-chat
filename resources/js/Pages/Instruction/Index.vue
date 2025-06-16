@@ -2,8 +2,8 @@
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import About from "@/Pages/Instruction/About.vue";
-import Commande from "@/Pages/Instruction/Commande.vue";
-import Comportement from "@/Pages/Instruction/Comportement.vue";
+import Command from "@/Pages/Instruction/Command.vue";
+import Behaviour from "@/Pages/Instruction/Behaviour.vue";
 
 const props = defineProps({
     preferences: {
@@ -33,12 +33,12 @@ const props = defineProps({
 
                         <input type="radio" name="tabs" class="tab" aria-label="Commandes"/>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <Commande :instruction="props.preferences[0]['instruction']"/>
+                            <Command :instruction="props.preferences[0]['instruction']"/>
                         </div>
 
                         <input type="radio" name="tabs" class="tab" aria-label="Comportements" />
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <Comportement :behaviour="props.preferences[0]['behaviour']"/>
+                            <Behaviour :behaviour="props.preferences[0]['behaviour']"/>
                         </div>
                     </div>
                 </div>
