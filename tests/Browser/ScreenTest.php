@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Conversation;
+use App\Models\Preference;
 use App\Models\Space;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ beforeEach(function () {
        'space_id' => $this->space->id,
     ]);
 
-    $this->preferences = \App\Models\Preference::factory()->create([
+    $this->preferences = Preference::factory()->create([
         'about' => 'About',
         'instruction' => 'Instruction',
         'behaviour' => 'Behaviour',
@@ -159,7 +160,7 @@ it('test switch between spaces', function () {
 
 /****************************** STREAMING ********************************/
 
-it('test STREAMING RESPONSE APPEAR', function () {
+it('test streaming response appear', function () {
     $this->browse(function (Browser $browser) {
         $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)

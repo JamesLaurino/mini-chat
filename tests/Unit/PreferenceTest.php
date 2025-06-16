@@ -1,15 +1,17 @@
 <?php
 
+use App\Http\Requests\Mocks\MockRequest;
 use App\Models\Preference;
 
 use App\Models\User;
+use App\Services\PreferenceService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
 
-it('getPreferenceByUserIdSingle', function () {
+it('test get preference by user id single', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -26,7 +28,7 @@ it('getPreferenceByUserIdSingle', function () {
 
 
     // WHEN
-    $service = app(\App\Services\PreferenceService::class);
+    $service = app(PreferenceService::class);
     $res = $service->getPreferenceByUserIdSingle();
 
     // THEN
@@ -36,7 +38,7 @@ it('getPreferenceByUserIdSingle', function () {
     expect($res['user_id'])->toBe($user->id);;
 });
 
-it('getPreferencesByUserId', function () {
+it('test get preferences by user id', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -53,7 +55,7 @@ it('getPreferencesByUserId', function () {
 
 
     // WHEN
-    $service = app(\App\Services\PreferenceService::class);
+    $service = app(PreferenceService::class);
     $res = $service->getPreferencesByUserId();
 
     // THEN
@@ -63,7 +65,7 @@ it('getPreferencesByUserId', function () {
     expect($res[0]['user_id'])->toBe($user->id);;
 });
 
-it('updatePreference', function () {
+it('test update preference', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -78,12 +80,12 @@ it('updatePreference', function () {
         'user_id' => $user->id
     ]);
 
-    $request = new \App\Http\Requests\Mocks\MockRequest();
+    $request = new MockRequest();
     $request->message = "Update About";
     $column = "about";
 
     // WHEN
-    $service = app(\App\Services\PreferenceService::class);
+    $service = app(PreferenceService::class);
     $service->updatePreference($preference,$request,$column);
 
     $res = Preference::where('user_id',$user->id)->get();
@@ -95,7 +97,7 @@ it('updatePreference', function () {
     expect($res[0]['user_id'])->toBe($user->id);;
 });
 
-it('createPreference', function () {
+it('test create preference', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -104,12 +106,12 @@ it('createPreference', function () {
     $this->actingAs($user);
 
 
-    $request = new \App\Http\Requests\Mocks\MockRequest();
+    $request = new MockRequest();
     $request->message = "About";
     $column = "about";
 
     // WHEN
-    $service = app(\App\Services\PreferenceService::class);
+    $service = app(PreferenceService::class);
     $res = $service->createPreference($request,$column);
 
     // THEN

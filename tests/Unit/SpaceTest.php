@@ -9,7 +9,7 @@ uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
 
-it('createNewSpace', function () {
+it('test create new space', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -20,16 +20,16 @@ it('createNewSpace', function () {
     $titre = "un titre de test";
 
     // WHEN
-    $service = app(\App\Services\SpaceService::class);
+    $service = app(SpaceService::class);
     $res = $service->createNewSpace($titre);
 
     // THEN
     expect($res)->not->toBeEmpty()->exists()->toBeTrue();
-    expect($res["titre"])->toBe("un titre de test");;
+    expect($res["titre"])->toBe("un titre de test");
     expect($res['user_id'])->toBe($user->id);;
 });
 
-it('getSpaceByUserId', function () {
+it('test get space by user id', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -48,7 +48,7 @@ it('getSpaceByUserId', function () {
     ]);
 
     // WHEN
-    $service = app(\App\Services\SpaceService::class);
+    $service = app(SpaceService::class);
     $res = $service->getSpaceByUserId();
 
     // THEN
@@ -58,7 +58,7 @@ it('getSpaceByUserId', function () {
     expect($res[0]['user_id'])->toBe($user->id);;
 });
 
-it('deleteSpaceById', function () {
+it('test delete space by id', function () {
 
     // GIVEN
     $user = User::factory()->create([

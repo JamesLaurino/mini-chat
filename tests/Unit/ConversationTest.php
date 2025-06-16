@@ -4,14 +4,16 @@ use App\Http\Requests\Mocks\MockRequest;
 use App\Models\Conversation;
 use App\Models\Space;
 use App\Models\User;
+use App\Services\ConversationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
 
-it('createConversationForNewSpace', function () {
+it('test create conversation for new space', function () {
 
+    // GIVEN
     $user = User::factory()->create([
         'name' => 'Alice',
     ]);
@@ -27,7 +29,7 @@ it('createConversationForNewSpace', function () {
     $this->actingAs($user);
 
     // WHEN
-    $service = app(\App\Services\ConversationService::class);
+    $service = app(ConversationService::class);
     $res = $service->createConversationForNewSpace($request, $response , $space);
 
 
@@ -39,7 +41,7 @@ it('createConversationForNewSpace', function () {
     expect($res->user_id)->toBe($user->id);
 });
 
-it('createFirstConversationForNewSpace', function () {
+it('test create first conversation for new space', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -57,7 +59,7 @@ it('createFirstConversationForNewSpace', function () {
     $request->message = "";
 
     // WHEN
-    $service = app(\App\Services\ConversationService::class);
+    $service = app(ConversationService::class);
     $res = $service->createFirstConversationForNewSpace($request, $space);
 
     // THEN
@@ -66,7 +68,7 @@ it('createFirstConversationForNewSpace', function () {
     expect($res->user_id)->toBe($user->id);
 });
 
-it('getConversationBySpaceId', function () {
+it('test get conversation by space id', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -100,7 +102,7 @@ it('getConversationBySpaceId', function () {
     ]);
 
     // WHEN
-    $service = app(\App\Services\ConversationService::class);
+    $service = app(ConversationService::class);
     $res = $service->getConversationBySpaceId($space->id);
 
     // THEN
@@ -109,7 +111,7 @@ it('getConversationBySpaceId', function () {
         ->toHaveLength(2);
 });
 
-it('getConversationByUserIdAndSpaceId', function () {
+it('test get conversation by user id and space id', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -136,7 +138,7 @@ it('getConversationByUserIdAndSpaceId', function () {
     $request->space_id = $space->id;
 
     // WHEN
-    $service = app(\App\Services\ConversationService::class);
+    $service = app(ConversationService::class);
     $res = $service->getConversationByUserIdAndSpaceId($request);
 
 
@@ -146,7 +148,7 @@ it('getConversationByUserIdAndSpaceId', function () {
     expect($res[0]->user_id)->toBe($user->id);
 });
 
-it('getConversationForOpenIA', function () {
+it('test get conversation for OpenIA', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -187,7 +189,7 @@ it('getConversationForOpenIA', function () {
     $request->conversationId = $space->id;
 
     // WHEN
-    $service = app(\App\Services\ConversationService::class);
+    $service = app(ConversationService::class);
     $res = $service->getConversationForOpenIA($request);
 
     // THEN

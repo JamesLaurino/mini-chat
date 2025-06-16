@@ -1,14 +1,14 @@
 <?php
 
 use App\Models\User;
+use App\Services\MetricService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Carbon;
 
 uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
 
-it('getQuota', function () {
+it('test get quota', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -16,7 +16,7 @@ it('getQuota', function () {
     ]);
 
     // WHEN
-    $service = app(\App\Services\MetricService::class);
+    $service = app(MetricService::class);
     $res = $service->getQuota($user);
 
     // THEN

@@ -6,11 +6,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
-it('crée un utilisateur', function () {
+it('test create a new user', function () {
+    // GIVEN
     User::factory()->create([
         'name' => 'Alice',
     ]);
 
-    expect(User::where('name', 'Alice')->exists())->toBeTrue();
+    // WHEN
+    $user = User::where('name', 'Alice')->exists();
+
+    // THEN
+    expect($user)->toBeTrue();
 });
 

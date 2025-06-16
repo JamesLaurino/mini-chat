@@ -13,7 +13,7 @@ uses(Tests\TestCase::class);
 uses(RefreshDatabase::class);
 
 
-it('getTitleMock', function () {
+it('test get title mock', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -29,7 +29,7 @@ it('getTitleMock', function () {
     expect($res)->not()->toBeEmpty();
 });
 
-it('getStreamMock', function () {
+it('test get stream mock', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -72,7 +72,7 @@ it('getStreamMock', function () {
 
 });
 
-it('getTitleAPI', function () {
+it('test get title api', function () {
 
     // GIVEN
     $user = User::factory()->create([
@@ -96,7 +96,7 @@ it('getTitleAPI', function () {
         ->and(str_word_count($res))->toBeLessThanOrEqual(4);
 });
 
-it('getStreamAPI', function () {
+it('test get stream api', function () {
 
     // GIVEN
     $user = User::factory()->create([
