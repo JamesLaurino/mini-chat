@@ -2,7 +2,6 @@
 
 namespace App\Interfaces;
 
-use App\Models\Conversation;
 
 interface ConversationRepositoryInterface
 {
