@@ -2,17 +2,19 @@
 
 namespace App\Services;
 
-use App\Models\Metric;
-use Illuminate\Support\Carbon;
+use App\Interfaces\MetricRepositoryInterface;
 
 class MetricService
 {
-    public function getQuota($user) {
 
-        $today = Carbon::today();
-        return Metric::firstOrCreate(
-            ['user_id' => $user->id, 'date' => $today],
-            ['request_count' => 0]
-        );
+    protected $metricRepository;
+
+    public function __construct(MetricRepositoryInterface $metricRepository)
+    {
+        $this->metricRepository = $metricRepository;
+    }
+
+    public function getQuota($user) {
+        return $this->metricRepository->getQuota($user);
     }
 }

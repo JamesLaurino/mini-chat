@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ConversationRepositoryInterface;
+use App\Interfaces\MetricRepositoryInterface;
+use App\Interfaces\PreferenceRepositoryInterface;
+use App\Interfaces\SpaceRepositoryInterface;
+use App\Repositories\ConversationRepository;
+use App\Repositories\MetricRepository;
+use App\Repositories\PreferenceRepository;
+use App\Repositories\SpaceRepository;
 use App\Services\ConversationService;
 use App\Services\MetricService;
 use App\Services\PreferenceService;
@@ -16,11 +24,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(SpaceService::class);
-        $this->app->singleton(ConversationService::class);
-        $this->app->singleton(PreferenceService::class);
         $this->app->singleton(WebService::class);
-        $this->app->singleton(MetricService::class);
+
+        $this->app->singleton(SpaceRepositoryInterface::class, SpaceRepository::class);
+        $this->app->singleton(SpaceService::class, function ($app) {
+            return new SpaceService($app->make(SpaceRepositoryInterface::class));
+        });
+
+        $this->app->singleton(MetricRepositoryInterface::class, MetricRepository::class);
+        $this->app->singleton(MetricService::class, function ($app) {
+            return new MetricService($app->make(MetricRepositoryInterface::class));
+        });
+
+        $this->app->singleton(PreferenceRepositoryInterface::class, PreferenceRepository::class);
+        $this->app->singleton(PreferenceService::class, function ($app) {
+            return new PreferenceService($app->make(PreferenceRepositoryInterface::class));
+        });
+
+        $this->app->singleton(ConversationRepositoryInterface::class, ConversationRepository::class);
+        $this->app->singleton(ConversationService::class, function ($app) {
+            return new ConversationService($app->make(ConversationRepositoryInterface::class));
+        });
+
     }
 
     /**

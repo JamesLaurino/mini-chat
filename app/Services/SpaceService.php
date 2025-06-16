@@ -2,27 +2,32 @@
 
 namespace App\Services;
 
-use App\Models\Space;
+use App\Interfaces\SpaceRepositoryInterface;
+use Exception;
 
 class SpaceService
 {
+
+    protected $spaceRepository;
+
+    public function __construct(SpaceRepositoryInterface $spaceRepository)
+    {
+        $this->spaceRepository = $spaceRepository;
+    }
+
     public function createNewSpace($titre) {
-        return Space::create([
-            'titre' => $titre,
-            'user_id' => auth()->user()->getAuthIdentifier()
-        ]);
+        return $this->spaceRepository->createNewSpace($titre);
     }
 
     public function getSpaceByUserId() {
-        return Space::where('user_id', auth()->user()->getAuthIdentifier())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        return $this->spaceRepository->getSpaceByUserId();
     }
 
     public function deleteSpaceById($spaceId) {
-        $post = Space::find($spaceId);
-        if ($post) {
-            $post->delete();
+        try {
+            $this->spaceRepository->deleteSpaceById($spaceId);
+        } catch (Exception $e) {
+            logger()->error("Erreur lors de la suppression de l'espace $spaceId: " . $e->getMessage());
         }
     }
 }
