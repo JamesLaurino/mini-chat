@@ -1,6 +1,5 @@
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import dateFormatService from '@/Helpers/DateFormatService.js';
+import dateFormatHelper from '@/Helpers/DateFormatHelper.js';
 import ConversationService from '@/Services/ConversationService.js';
 
 export function useFormSubmission(props) {
@@ -46,8 +45,8 @@ export function useFormSubmission(props) {
                     let conversationObjet = {
                         "response": responseMessage.value,
                         "question": form.message,
-                        "created_at": dateFormatService(),
-                        "updated_at": dateFormatService(),
+                        "created_at": dateFormatHelper(),
+                        "updated_at": dateFormatHelper(),
                         "space_id": conversationsRef.value[0]?.['space_id']
                     };
 

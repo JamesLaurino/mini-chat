@@ -1,4 +1,4 @@
-function dateFormatService() {
+function dateFormatHelper() {
     const now = new Date();
 
     const year = now.getFullYear();
@@ -11,4 +11,4 @@ function dateFormatService() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-export default dateFormatService;
+export default dateFormatHelper;
