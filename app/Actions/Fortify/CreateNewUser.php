@@ -2,9 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\Conversation;
-use App\Models\Preference;
-use App\Models\Space;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -29,31 +26,10 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        $user = User::create([
+        return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
-
-        $space = Space::create([
-            'user_id' => $user->id,
-            'titre' => 'About mini chat'
-        ]);
-
-         Conversation::create([
-            'question' => 'Hello who are you ?',
-            'response' => "Hello i'm mini-chat a great LLM ! How can i help you ?",
-            'user_id' => $user->id,
-            'space_id' => $space->id,
-        ]);
-
-        Preference::create([
-            'about' => 'What about me ?',
-            'instruction' => 'Tell me what is your own instructions',
-            'behaviour' => "What's the behaviour you want ?",
-            'user_id' => $user->id,
-        ]);
-
-        return $user;
     }
 }

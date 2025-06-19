@@ -35,7 +35,7 @@ const props = defineProps({
 const form = useForm({
     message: '',
     model: props.selectedModel || (props.models.length > 0 ? props.models[0].id || props.models[0].name : 'openai/gpt-4.1-mini'),
-    conversationId: props.spaces[0]["id"]
+    conversationId: props.spaces.length > 0 ? props.spaces[0]["id"] : -1
 });
 
 let conversationsRef = computed(() => props.conversations);
@@ -293,5 +293,5 @@ const openSidePanel = () => {
         </div>
     </div>
 
-    <SidePanel :spaces="spaces" ref="sidePanelRef" />
+    <SidePanel :currentSpace="spaceRef" :spaces="spaces" ref="sidePanelRef" />
 </template>
