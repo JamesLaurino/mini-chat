@@ -4,8 +4,9 @@ import {computed, nextTick, ref, watch} from "vue";
 import SidePanel from '@/Components/SidePanel.vue';
 import ConversationHistorique from "@/Components/ConversationHistorique.vue";
 import {useStream} from "@laravel/stream-vue";
-import dateFormatService from "@/Helpers/DateFormatService.js";
+import dateFormatHelper from "@/Helpers/DateFormatHelper.js";
 import ConversationService from "@/Services/ConversationService.js";
+import IconButton from "@/Components/IconButton.vue";
 
 const props = defineProps({
     flash: {
@@ -49,15 +50,15 @@ const isStreamingResponse = ref(false);
 const scrollContainer = ref(null)
 
 
-const { data, isFetching, isStreaming, send } = useStream("/stream", {
+const { data, send } = useStream("/stream", {
     onFinish:() =>
     {
         console.log("Onfinish : " + data.value)
         let conversationObjet = {
             "response": data.value,
             "question": currentQuestion.value,
-            "created_at": dateFormatService(),
-            "updated_at": dateFormatService(),
+            "created_at": dateFormatHelper(),
+            "updated_at": dateFormatHelper(),
             "space_id": spaceRef.value ? spaceRef.value : conversationsRef.value[0]?.['space_id']
         };
 
@@ -140,7 +141,7 @@ const autoResize = () => {
     if (!el) return
 
     el.style.height = 'auto'
-    const maxHeight = 192 // 48 * 4 = 12rem = Tailwind's max-h-48
+    const maxHeight = 192
     const scrollHeight = el.scrollHeight
 
     if (scrollHeight > maxHeight) {
@@ -151,7 +152,6 @@ const autoResize = () => {
         el.style.overflowY = 'hidden'
     }
 
-    // Scroll le conteneur principal (comme dans ChatGPT)
     nextTick(() => {
         if (scrollContainer.value) {
             scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight
@@ -176,20 +176,21 @@ const openSidePanel = () => {
 <template>
     <Head title="Bienvenue" />
     <div class="flex flex-col min-h-screen bg-base-200 p-4">
-        <button
+        <IconButton
             @click="openSidePanel"
-            class="btn btn-square fixed top-4 left-4 z-40"
+            position="fixed top-4 left-4 z-40"
             aria-label="Ouvrir le panneau latéral">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-        </button>
+        </IconButton>
 
-        <button class="btn btn-square fixed top-4 right-4 z-40">
+        <IconButton
+            position="fixed top-4 right-4 z-40">
             <Link :href="route('dashboard')">
                 <i class="fa-solid fa-user"></i>
             </Link>
-        </button>
+        </IconButton>
 
         <div ref="scrollContainer" class="flex-grow container mx-auto max-w-xl flex flex-col pt-16 overflow-y-auto">
 
@@ -213,10 +214,10 @@ const openSidePanel = () => {
             <form @submit.prevent="submit" class="card bg-base-100 shadow-xl overflow-hidden p-2">
                 <div class="flex items-end gap-2 relative px-2 py-1">
 
-                    <button
+                    <IconButton
                         type="button"
                         @click="toggleOptions"
-                        class="btn btn-ghost btn-circle btn-sm"
+                        btnClass="btn-ghost btn-circle btn-sm"
                         aria-label="Afficher/Masquer les options">
                         <svg
                             v-if="!showOptions"
@@ -238,7 +239,7 @@ const openSidePanel = () => {
                             stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
                         </svg>
-                    </button>
+                    </IconButton>
 
                     <textarea
                         ref="messageTextarea"
@@ -250,9 +251,9 @@ const openSidePanel = () => {
                         @input="autoResize"
                     ></textarea>
 
-                    <button
+                    <IconButton
                         type="submit"
-                        class="btn btn-accent btn-circle btn-sm"
+                        btnClass="btn-accent btn-circle btn-sm"
                         :disabled="isLoading || !form.message.trim()"
                         aria-label="Envoyer le message">
                         <svg
@@ -264,7 +265,8 @@ const openSidePanel = () => {
                             stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
-                    </button>
+                    </IconButton>
+
                 </div>
 
                 <div class="label text-error px-4 pt-1" v-if="form.errors.message">
