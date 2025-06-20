@@ -152,7 +152,7 @@ it('test switch between spaces', function () {
         ->click('.btn.btn-square.fixed.top-4.left-4')
         ->waitFor('#side-panel-component')
         ->assertVisible('#side-panel-component')
-        ->clickLink('Nouvelle conversation') // Assurez-vous d'ajouter ce texte à votre bouton
+        ->clickLink('Nouvelle conversation')
         ->pause(2000)
         ->assertPathIs('/ask');
     });
@@ -170,7 +170,7 @@ it('test streaming response appear', function () {
             ->click('button[type="submit"]')
             ->waitFor('.loading.loading-spinner')
             ->screenshot('screenshot')
-            ->assertSee('Test streaming'); // Le message envoyé
+            ->assertSee('Test streaming');
     });
 });
 
