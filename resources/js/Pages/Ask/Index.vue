@@ -28,7 +28,7 @@ const props = defineProps({
         default: () => []
     },
     space: {
-        type: Number
+        type: [Number,String]
     }
 });
 
