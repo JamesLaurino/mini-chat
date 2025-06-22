@@ -53,7 +53,6 @@ const scrollContainer = ref(null)
 const { data, send } = useStream("/stream", {
     onFinish:() =>
     {
-        console.log("Onfinish : " + data.value)
         let conversationObjet = {
             "response": data.value,
             "question": currentQuestion.value,
@@ -68,8 +67,6 @@ const { data, send } = useStream("/stream", {
         }
         responseMessage.value = '';
         errorMessage.value = null;
-        console.log(conversationObjet)
-        console.log("Props spaceRef : " + spaceRef.value)
         ConversationService.addConversation(conversationObjet)
             .then((result) => {
                 console.log("Conversation ajoutée avec succès :", result);
@@ -89,11 +86,6 @@ const { data, send } = useStream("/stream", {
 
 const sendMessage = () => {
 
-    console.log("SendMessage call")
-    console.log("Model : " + form.model);
-    console.log("Message : " + form.message);
-    console.log("ConversationId : " + form.conversationId);
-
     send({
         message: form.message,
         model:form.model,
@@ -110,11 +102,8 @@ const submit = async () => {
     currentQuestion.value = form.message;
 
     if (!props.conversations.length > 0) {
-        console.log('space call')
         form.post('/space', {
             onSuccess: () => {
-                console.log("success")
-                console.log(props.conversations)
                 if (props.flash.error) {
                     isLoading.value = false;
                     errorMessage.value = props.flash.error;

@@ -15,33 +15,20 @@
                 Si vous avez besoin d'un accès plus important,
                 <a href="/contact">contactez-nous</a>.
             </p>
-<!--            <button @click="goBack" class="back-button">-->
-<!--                Retour à la page précédente-->
-<!--            </button>-->
         </div>
     </div>
 </template>
 
 <script setup>
-
-
-
-import {router} from "@inertiajs/vue3";
-
-const goBack = () => {
-    router.back(); // Retour à la page précédente dans l'historique
-    // Ou si vous n'utilisez pas Vue Router :
-    // window.history.back();
-};
 </script>
 
 <style scoped>
-/* Styles de base pour un design attrayant */
+
 .quota-exceeded-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Prend toute la hauteur de la fenêtre */
+    min-height: 100vh;
     background-color: #f7f7f7;
     font-family: 'Arial', sans-serif;
 }
@@ -56,7 +43,7 @@ const goBack = () => {
 
 .icon {
     font-size: 3rem;
-    color: #191845; /* Orange - couleur d'avertissement */
+    color: #191845;
     margin-bottom: 1rem;
 }
 
@@ -72,7 +59,7 @@ p {
 }
 
 a {
-    color: #007bff; /* Bleu - couleur de lien */
+    color: #007bff;
     text-decoration: none;
 }
 
@@ -80,21 +67,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.back-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    margin-top: 1rem;
-}
-
-.back-button:hover {
-    background-color: #0056b3;
-}
-
-/* Ajoutez des animations pour un effet plus dynamique */
 .content {
     animation: fadeIn 0.5s ease-in-out;
 }
