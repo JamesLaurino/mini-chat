@@ -97,7 +97,7 @@ class AskController extends Controller
 
             $this->conversationService->createFirstConversationForNewSpace($request,$space);
 
-            return redirect()->route("ask.show", $space->id)->with('message', 'redirection done successfully');
+            return redirect()->route("ask.show", $space->id)->with('message', 'redirection réussie');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur: ' . $e->getMessage());
         }
@@ -113,7 +113,7 @@ class AskController extends Controller
 
         $this->conversationService->addConversationInSpace($request);
 
-        return redirect()->back()->with('error', 'Erreur: ajout de la conversation impossible');
+        return redirect()->back()->with('message', 'Nouvelle conversation enregistrée avec success');
     }
 
 }

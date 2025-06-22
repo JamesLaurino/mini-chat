@@ -72,7 +72,6 @@ const { data, send } = useStream("/stream", {
                 console.log("Conversation ajoutée avec succès :", result);
             })
             .catch((error) => {
-                console.error("Erreur lors de l'ajout de la conversation :", error);
                 errorMessage.value = "Erreur lors de la sauvegarde de la conversation.";
                 isLoading.value = false;
             });
