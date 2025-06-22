@@ -68,10 +68,10 @@ const { data, send } = useStream("/stream", {
         responseMessage.value = '';
         errorMessage.value = null;
         ConversationService.addConversation(conversationObjet)
-            .then((result) => {
-                console.log("Conversation ajoutée avec succès :", result);
+            .then(() => {
+                isLoading.value = false;
             })
-            .catch((error) => {
+            .catch(() => {
                 errorMessage.value = "Erreur lors de la sauvegarde de la conversation.";
                 isLoading.value = false;
             });

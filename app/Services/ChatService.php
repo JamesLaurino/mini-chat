@@ -86,48 +86,6 @@ class ChatService
         });
     }
 
-    public function generateLoremIpsum(int $numParagraphs = 1, int $wordsPerParagraph = 100): string
-    {
-        $loremIpsumWords = [
-            'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do',
-            'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'ut',
-            'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi',
-            'ut', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'dolor', 'in',
-            'reprehenderit', 'in', 'voluptate', 'velit', 'esse', 'cillum', 'dolore', 'eu', 'fugiat', 'nulla',
-            'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'in', 'culpa',
-            'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'
-        ];
-
-        $text = [];
-        for ($p = 0; $p < $numParagraphs; $p++) {
-            $paragraph = [];
-            for ($w = 0; $w < $wordsPerParagraph; $w++) {
-                // Sélectionne un mot aléatoire
-                $word = $loremIpsumWords[array_rand($loremIpsumWords)];
-
-                // Ajoute de la ponctuation de manière aléatoire (pour un rendu plus naturel)
-                if ($w > 0 && $w % 10 === 0 && random_int(0,1)) { // Une virgule tous les 10 mots environ
-                    $word = ', ' . $word;
-                }
-                if ($w === $wordsPerParagraph - 1) { // Le dernier mot du paragraphe
-                    $word .= '.';
-                } elseif (random_int(0, 15) === 0) { // Un point de temps en temps
-                    $word .= '.';
-                }
-
-                $paragraph[] = $word;
-            }
-            $currentParagraph = implode(' ', $paragraph);
-
-            // Met la première lettre de la phrase en majuscule
-            $currentParagraph = ucfirst($currentParagraph);
-
-            $text[] = $currentParagraph;
-        }
-
-        return implode("\n\n", $text); // Joindre les paragraphes avec deux retours à la ligne
-    }
-
     /**
      * @param array{role: 'user'|'assistant'|'system'|'function', content: string} $messages
      * @param string|null $model

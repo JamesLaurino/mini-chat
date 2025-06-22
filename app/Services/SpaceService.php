@@ -16,18 +16,29 @@ class SpaceService
     }
 
     public function createNewSpace($titre) {
-        return $this->spaceRepository->createNewSpace($titre);
+        try {
+            $space = $this->spaceRepository->createNewSpace($titre);
+        } catch (Exception $e) {
+            logger()->error("Erreur lors de la création de l'espace ayant pour titre $titre : " . $e->getMessage());
+        }
+        return $space;
     }
 
     public function getSpaceByUserId() {
-        return $this->spaceRepository->getSpaceByUserId();
+        try {
+             $space = $this->spaceRepository->getSpaceByUserId();
+        } catch (Exception $e) {
+            logger()->error("Erreur lors de la récupèration de l'espace par son id : " . $e->getMessage());
+        }
+
+        return $space;
     }
 
     public function deleteSpaceById($spaceId) {
         try {
             $this->spaceRepository->deleteSpaceById($spaceId);
         } catch (Exception $e) {
-            logger()->error("Erreur lors de la suppression de l'espace $spaceId: " . $e->getMessage());
+            logger()->error("Erreur lors de la suppression de l'espace avec l'id $spaceId : " . $e->getMessage());
         }
     }
 }

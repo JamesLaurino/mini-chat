@@ -91,7 +91,7 @@ class AskController extends Controller
         try {
 
             //$titre = $this->webService->getResponse($request, "Génère un titre de maximum 4 mots pour ce message :");
-            $titre = (new ChatService())->generateLoremIpsum(1,2);
+            $titre = "Space titre : " . substr(uniqid(),7);
 
             $space = $this->spaceService->createNewSpace($titre);
 
@@ -99,6 +99,7 @@ class AskController extends Controller
 
             return redirect()->route("ask.show", $space->id)->with('message', 'redirection réussie');
         } catch (\Exception $e) {
+            logger()->error("Une erreur est survenue lors de la création d'un nouvel espace : " . $e->getMessage());
             return redirect()->back()->with('error', 'Erreur: ' . $e->getMessage());
         }
     }
@@ -108,6 +109,7 @@ class AskController extends Controller
         $conversations = $this->conversationService->getConversationByUserIdAndSpaceId($request);
 
         if($conversations->isEmpty()) {
+            logger()->error("Une erreur est survenue lors de l'ajout d'une conversation : la liste des conversations est vide");
             return redirect()->back()->with('error', 'Erreur: Une erreur technique est survenue');
         }
 

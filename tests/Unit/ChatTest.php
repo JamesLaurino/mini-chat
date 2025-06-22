@@ -23,7 +23,7 @@ it('test get title mock', function () {
     $this->actingAs($user);
 
     // WHEN
-    $res = (new ChatService())->generateLoremIpsum(1,2);
+    $res = "Space titre : " . substr(uniqid(),7);
 
     // THEN
     expect($res)->not()->toBeEmpty();

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\PreferenceRepositoryInterface;
+use Exception;
 
 class PreferenceService
 {
@@ -16,19 +17,42 @@ class PreferenceService
 
 
     public function getPreferenceByUserIdSingle() {
-         return $this->preferenceRepository->getPreferenceByUserIdSingle();
+        try {
+            $preference = $this->preferenceRepository->getPreferenceByUserIdSingle();
+        } catch (Exception $e) {
+            logger()->error("Erreur lors de la récupération de la préférence unique par l'id du user : " . $e->getMessage());
+        }
+         return $preference;
     }
 
     public function getPreferencesByUserId() {
-        return $this->preferenceRepository->getPreferencesByUserId();
+
+        try {
+            $preference = $this->preferenceRepository->getPreferencesByUserId();
+        } catch (Exception $e) {
+            logger()->error("Erreur lors de la récupération des préférences par l'id du user : " . $e->getMessage());
+        }
+
+        return $preference;
     }
 
     public function updatePreference($preference, $request, $column):void
     {
-        $this->preferenceRepository->updatePreference($preference, $request, $column);
+        try {
+            $this->preferenceRepository->updatePreference($preference, $request, $column);
+        } catch (Exception $e) {
+            logger()->error("Erreur de la mise à jours des préférences : " . $e->getMessage());
+        }
     }
 
     public function createPreference($request,$column) {
-        return $this->preferenceRepository->createPreference($request, $column);
+
+        try {
+            $preference = $this->preferenceRepository->createPreference($request, $column);
+        } catch (Exception $e) {
+            logger()->error("Erreur de la création des préférences : " . $e->getMessage());
+        }
+
+        return $preference;
     }
 }

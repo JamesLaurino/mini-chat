@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\MetricRepositoryInterface;
+use Exception;
 
 class MetricService
 {
@@ -15,6 +16,13 @@ class MetricService
     }
 
     public function getQuota($user) {
-        return $this->metricRepository->getQuota($user);
+
+        try {
+            $metric = $this->metricRepository->getQuota($user);
+        } catch (Exception $e) {
+            logger()->error("Erreur de la récupération des métriques pour le user $user : " . $e->getMessage());
+        }
+
+        return $metric;
     }
 }
