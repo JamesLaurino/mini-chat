@@ -79,7 +79,7 @@ alt="Mini-Chat Logo" width="50px" height="70px"/>
 
 <h2>5. Migrations et Remplissage de la Base de Données</h2>
   <p>Exécutez vos migrations de base de données et remplissez la base de données avec les données initiales :</p>
-  <pre><code>php artisan migrate --seed</code></pre>
+  <pre><code>php artisan migrate:fresh --seed</code></pre>
 
 <h2>6. Lancer les tests unitaires</h2>
   <p>Exécutez les tests unitaires</p>
