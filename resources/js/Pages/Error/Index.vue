@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
     <div class="quota-exceeded-container">
         <div class="content">
@@ -11,16 +14,9 @@
                 Nous sommes désolés, mais vous avez atteint votre limite de requêtes pour aujourd'hui.
                 Veuillez réessayer demain.
             </p>
-            <p>
-                Si vous avez besoin d'un accès plus important,
-                <a href="/contact">contactez-nous</a>.
-            </p>
         </div>
     </div>
 </template>
-
-<script setup>
-</script>
 
 <style scoped>
 

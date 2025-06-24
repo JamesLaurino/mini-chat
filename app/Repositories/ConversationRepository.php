@@ -51,9 +51,10 @@ class ConversationRepository implements ConversationRepositoryInterface
         $conversations = Conversation::where("user_id", auth()->id())
             ->where('space_id', $request->conversationId)
             ->orderBy("created_at", "desc")
-            ->take(10)
             ->get()
             ->reverse();
+
+        logger()->info('ID: ' . $request->conversationId);
 
         $messages = [
             [
@@ -63,14 +64,11 @@ class ConversationRepository implements ConversationRepositoryInterface
         ];
 
         foreach ($conversations as $conv) {
-            if (!empty($conv->question)) {
+            if (!empty($conv->question) && !empty($conv->response)) {
                 $messages[] = [
                     'role' => 'user',
                     'content' => $conv->question
                 ];
-            }
-
-            if (!empty($conv->response)) {
                 $messages[] = [
                     'role' => 'assistant',
                     'content' => $conv->response
@@ -84,6 +82,8 @@ class ConversationRepository implements ConversationRepositoryInterface
                 'content' => $request->message
             ];
         }
+
+        logger()->info('Messages envoyés à OpenAI : ' . json_encode($messages));
 
         return ['messages' => $messages];
     }
