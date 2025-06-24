@@ -48,33 +48,42 @@ class ConversationRepository implements ConversationRepositoryInterface
 
     public function getConversationForOpenIA($request)
     {
-        $conversations = Conversation::where("user_id",auth()->user()->getAuthIdentifier())
+        $conversations = Conversation::where("user_id", auth()->id())
             ->where('space_id', $request->conversationId)
-            ->orderBy("created_at","asc")
-            ->get();
+            ->orderBy("created_at", "desc")
+            ->take(10)
+            ->get()
+            ->reverse();
 
-        $messages = [];
+        $messages = [
+            [
+                'role' => 'system',
+                'content' => 'Tu es un assistant utile et amical.'
+            ]
+        ];
 
         foreach ($conversations as $conv) {
-            $messages[] = [
-                'role' => 'user',
-                'content' => $conv->question
-            ];
+            if (!empty($conv->question)) {
+                $messages[] = [
+                    'role' => 'user',
+                    'content' => $conv->question
+                ];
+            }
 
-            $messages[] = [
-                'role' => 'assistant',
-                'content' => $conv->response
-            ];
+            if (!empty($conv->response)) {
+                $messages[] = [
+                    'role' => 'assistant',
+                    'content' => $conv->response
+                ];
+            }
         }
 
-        // Ajout du message actuel
-        if ($request->message) {
+        if (!empty($request->message)) {
             $messages[] = [
                 'role' => 'user',
                 'content' => $request->message
             ];
         }
-
 
         return ['messages' => $messages];
     }
