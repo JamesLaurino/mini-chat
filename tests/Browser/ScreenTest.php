@@ -169,8 +169,7 @@ it('test streaming response appear', function () {
             ->type('#message', 'Test streaming')
             ->click('button[type="submit"]')
             ->waitFor('.loading.loading-spinner')
-            ->screenshot('screenshot')
-            ->assertSee('Test streaming');
+            ->assertSee('Chargement de la réponse...');
     });
 });
 

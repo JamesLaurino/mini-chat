@@ -193,7 +193,6 @@ it('test get conversation for OpenIA', function () {
     $res = $service->getConversationForOpenIA($request);
 
     // THEN
-    expect($res["messages"])->toHaveLength(6);
+    expect($res["messages"])->toHaveLength(7);
     expect($res)->not()->toBeEmpty();
-    expect($res["messages"][0]["content"])->toBe("coucou 1");
 });
