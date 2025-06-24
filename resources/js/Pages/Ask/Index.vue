@@ -84,9 +84,7 @@ const { data, send } = useStream("/stream", {
 });
 
 const sendMessage = () => {
-    const segments = window.location.pathname.split('/');
-    const spaceId = segments[segments.length - 1];
-    form.conversationId = spaceId;
+    form.conversationId = spaceRef.value ? spaceRef.value : conversationsRef.value[0]?.['space_id']
     send({
         message: form.message,
         model:form.model,
