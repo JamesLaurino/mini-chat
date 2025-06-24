@@ -4,13 +4,55 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import About from "@/Pages/Instruction/About.vue";
 import Command from "@/Pages/Instruction/Command.vue";
 import Behaviour from "@/Pages/Instruction/Behaviour.vue";
+import {ref, watch} from "vue";
 
 const props = defineProps({
+    flash: {
+        type: Object
+    },
     preferences: {
         type: Array,
         default: () => []
     }
 });
+
+const message = ref('');
+const showMessage = ref(false);
+
+const error = ref('');
+const showError = ref(false);
+
+watch(
+    () => props.flash.message,
+    (newVal) => {
+        if (newVal) {
+            message.value = newVal;
+            showMessage.value = true;
+
+            setTimeout(() => {
+                showMessage.value = false;
+                message.value = '';
+            }, 3000);
+        }
+    },
+    { immediate: true }
+);
+
+watch(
+    () => props.flash.error,
+    (newVal) => {
+        if (newVal) {
+            error.value = newVal;
+            showError.value = true;
+
+            setTimeout(() => {
+                showError.value = false;
+                error.value = '';
+            }, 3000);
+        }
+    },
+    { immediate: true }
+);
 
 </script>
 
@@ -21,6 +63,14 @@ const props = defineProps({
                 Instruction
             </h2>
         </template>
+
+        <div v-if="showMessage" class="bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded mb-4">
+            {{ message }}
+        </div>
+
+        <div v-if="showError" class="bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded mb-4">
+            {{ error }}
+        </div>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

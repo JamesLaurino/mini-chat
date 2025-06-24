@@ -79,11 +79,6 @@ function postAbout() {
                 <span class="label-text-alt text-red-700">{{ form.errors.model }}</span>
             </div>
 
-            <div v-if="isLoading" role="alert" class="alert alert-info mb-4">
-                <span class="loading loading-spinner"></span>
-                Chargement de la réponse...
-            </div>
-
             <div class="flex justify-end">
                 <button @click="postAbout"
                         dusk="submit-about"
