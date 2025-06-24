@@ -30,7 +30,7 @@ alt="Mini-Chat Logo" width="50px" height="70px"/>
 
 <h2>1. Cloner le Projet</h2>
   <p>Commencez par cloner le dépôt sur votre machine locale :</p>
-  <pre><code>git clone https://github.com/ton-utilisateur/mini-chat.git</code></pre>
+  <pre><code>git clone https://github.com/JamesLaurino/mini-chat</code></pre>
 
 <h2>2. Configuration de la Base de Données (Docker)</h2>
   <p>Nous utiliserons Docker pour configurer vos bases de données MySQL pour les environnements de test et de production. <strong>N'oubliez pas de remplacer <code>&lt;MON_PASSWORD&gt;</code> et <code>&lt;MA_DATABASE&gt;</code> par le mot de passe fort et le nom de base de données souhaités.</strong></p>
