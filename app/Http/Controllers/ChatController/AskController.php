@@ -42,33 +42,21 @@ class AskController extends Controller
      */
     public function stream(StreamRequest $request)
     {
-        // MOCK implementation
-        return response()->stream(function () use ($request) {
+        $conversation = $this->conversationService->getConversationForOpenIA($request)['messages'];
+        return response()->stream(function () use ($conversation, $request) {
 
-            $stream = ["hello ","how ","can ", "i ","help ","you ","today " ,"James ", "?"];
+            $stream = (new ChatService())->getstream(
+                messages: $conversation,
+                model: $request->model
+            );
 
             foreach ($stream as $response) {
-                yield $response;
-                usleep(1000000);
+
+                $content = $response->choices[0]->delta->content ?? '';
+                yield $content;
+                usleep(100000);
             }
         });
-
-        // API IMPLEMENTATION
-//        $conversation = $this->conversationService->getConversationForOpenIA($request)['messages'];
-//        return response()->stream(function () use ($conversation, $request) {
-//
-//            $stream = (new ChatService())->getstream(
-//                messages: $conversation,
-//                model: $request->model
-//            );
-//
-//            foreach ($stream as $response) {
-//
-//                $content = $response->choices[0]->delta->content ?? '';
-//                yield $content;
-//                usleep(100000);
-//            }
-//        });
     }
 
     public function show($id)
@@ -90,8 +78,7 @@ class AskController extends Controller
     public function beginNewSpace(AskRequest $request) {
         try {
 
-            //$titre = $this->webService->getResponse($request, "Génère un titre de maximum 4 mots pour ce message :");
-            $titre = "Space titre : " . substr(uniqid(),7);
+            $titre = $this->webService->getResponse($request, "Génère un titre de maximum 4 mots pour ce message :");
 
             $space = $this->spaceService->createNewSpace($titre);
 
