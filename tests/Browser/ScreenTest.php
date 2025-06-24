@@ -122,6 +122,7 @@ it('test model selected work', function () {
         $user = User::where('email', 'alice@example.com')->first();
         $browser->loginAs($user)
             ->visit('/ask')
+            ->waitFor('button[aria-label="Afficher/Masquer les options"]')
             ->click('button[aria-label="Afficher/Masquer les options"]')
             ->waitFor('#model')
             ->select('#model', 'openai/gpt-4.1-mini')
