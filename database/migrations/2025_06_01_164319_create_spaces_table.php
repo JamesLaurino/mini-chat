@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Space;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
 
 return new class extends Migration
 {
@@ -15,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string("titre");
-            $table->foreignIdFor(\App\Models\User::class)
+            $table->foreignIdFor(User::class)
                 ->nullable()
                 ->constrained()
                 ->cascadeOnDelete();
         });
 
         Schema::table('conversations', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\Space::class)
+            $table->foreignIdFor(Space::class)
                 ->nullable()->constrained()->cascadeOnDelete();
         });
     }
