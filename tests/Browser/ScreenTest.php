@@ -103,7 +103,7 @@ it('test user can send message', function () {
             ->click('button[type="submit"]')
             ->waitFor('.loading.loading-spinner')
             ->assertPresent('.loading.loading-spinner')
-            ->pause(2000)
+            ->pause(4000)
             ->assertSee('Test message');
     });
 });

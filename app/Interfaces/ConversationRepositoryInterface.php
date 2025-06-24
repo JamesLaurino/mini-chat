@@ -14,5 +14,6 @@ interface ConversationRepositoryInterface
     public function getConversationBySpaceId($spaceId);
 
     public function getConversationForOpenIA($request);
+
     public function getConversationByUserIdAndSpaceId($request);
 }
