@@ -54,8 +54,6 @@ class ConversationRepository implements ConversationRepositoryInterface
             ->get()
             ->reverse();
 
-        logger()->info('ID: ' . $request->conversationId);
-
         $messages = [
             [
                 'role' => 'system',
